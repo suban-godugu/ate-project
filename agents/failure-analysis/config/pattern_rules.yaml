@@ -1,0 +1,69 @@
+schema_version: "1.0"
+rule_set_version: "2026.07.1"
+confidence_threshold: 0.55
+recurrence_threshold: 2
+rules:
+  - rule_key: explicit_scan_failure
+    name: Explicit Scan Pattern Failure
+    category: scan
+    version: "1.0"
+    severity_level: high
+    confidence: 0.99
+    match:
+      all:
+        - field: pass_fail
+          operator: equals
+          value: FAIL
+        - field: failing_patterns
+          operator: not_empty
+    group_by: failing_patterns
+    explanation: "Explicit failing ATPG pattern reported by the tester log."
+  - rule_key: scan_chain_mismatch
+    name: Scan Chain Signature Mismatch
+    category: structural_scan
+    version: "1.0"
+    severity_level: critical
+    confidence: 0.95
+    match:
+      all:
+        - field: pass_fail
+          operator: equals
+          value: FAIL
+        - field: scan_fail_data.actual_signature
+          operator: not_empty
+        - field: scan_fail_data.expected_signature
+          operator: differs_from
+          other_field: scan_fail_data.actual_signature
+    group_by: scan_fail_data.scan_chain_id
+    explanation: "Expected and observed scan signatures differ on the same chain."
+  - rule_key: hard_bin_failure
+    name: Hard Bin Failure Signature
+    category: binning
+    version: "1.0"
+    severity_level: high
+    confidence: 0.90
+    match:
+      all:
+        - field: pass_fail
+          operator: equals
+          value: FAIL
+        - field: hard_bin
+          operator: not_in
+          value: ["", "0", "1", "PASS"]
+    group_by: hard_bin
+    explanation: "A non-pass hard bin repeatedly identifies the same failure signature."
+  - rule_key: parametric_limit_failure
+    name: Parametric Measurement Failure
+    category: parametric
+    version: "1.0"
+    severity_level: medium
+    confidence: 0.82
+    match:
+      all:
+        - field: pass_fail
+          operator: equals
+          value: FAIL
+        - field: parametric
+          operator: not_empty
+    group_by: failing_tests
+    explanation: "Failed device contains parametric measurements requiring limit review."

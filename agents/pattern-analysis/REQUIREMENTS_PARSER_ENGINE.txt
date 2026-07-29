@@ -1,0 +1,2 @@
+# Required for shared parsing (install once per Python env)
+# pip install -e "C:\personal\parser engine"

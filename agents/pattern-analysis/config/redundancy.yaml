@@ -1,0 +1,11 @@
+redundancy:
+  similarity_metric: cosine
+  similarity_threshold: 0.980
+  embedding_only_confidence_weight: 0.50
+  confidence_precision: 3
+  display_precision: 1
+  confidence_source: "Embedding Only"
+  review_status: "Pending Review"
+  review_label: "Candidate for Review"
+  enable_audit_logging: true
+  enable_history: true

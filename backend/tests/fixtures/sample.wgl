@@ -1,0 +1,34 @@
+waveform
+
+! VERILUMEN WGL Parser Fixture
+! Device: PROD-X1
+! Tester: TTR-ADV-01
+! Pattern-Group: scan-chain
+! Pattern-Category: core-scan
+
+signal
+  clk : input;
+  reset : input;
+  scan_en : input;
+  scan_in : input;
+  scan_out : output;
+end
+
+timeplate wgl_default period 100ns
+  clk := input[0ns:D, 50ns:S, 80ns:D];
+  reset := input[0ns:D];
+  scan_en := input[0ns:D];
+  scan_in := input[0ns:D];
+  scan_out := output[0ns:X, 80ns:Q];
+end
+
+scanChain SC_CORE
+  [scan_in, scan_out];
+end
+
+pattern core_scan_pat ()
+  vector(+ , wgl_default) := [0 1 0 1 0];
+  vector(+ , wgl_default) := [1 0 1 0 1];
+end
+
+end

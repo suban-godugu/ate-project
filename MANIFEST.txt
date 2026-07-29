@@ -1,0 +1,11 @@
+﻿agents
+backend
+dashboard
+runtime
+agents/failure-analysis
+agents/pattern-analysis
+agents/pattern-recommendation
+agents/scan-debug-recommendation
+agents/scan-diagnosis
+agents/spatial-ai
+agents/test-optimization

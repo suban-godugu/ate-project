@@ -1,0 +1,10 @@
+# FA-FR-007 die-level spatial analytics configuration
+schema_version: "1.0"
+hotspot_density_threshold: 0.15
+hotspot_min_dies: 3
+dbscan_eps: 2.5
+dbscan_min_samples: 3
+edge_radius_ratio: 0.67
+center_radius_ratio: 0.34
+grid_resolution: 20
+anomaly_contamination: 0.05

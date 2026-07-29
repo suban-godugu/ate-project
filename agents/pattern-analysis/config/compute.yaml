@@ -1,0 +1,13 @@
+# Optional GPU / CUDA compute settings for Pattern Analysis Agent.
+#
+# L1 clustering (PA-FR-006) defaults to CPU so artifact hashes stay
+# byte-identical. Similarity top-N (PA-FR-008) may use CUDA when available.
+compute:
+  # auto | cpu | cuda
+  device: auto
+  # Accelerate FR-008 top-N / batch cosine when CUDA is resolved
+  gpu_similarity: true
+  # Accelerate FR-006 pdist when true (may change L1 hashes vs pure SciPy)
+  gpu_clustering: false
+  # Skip GPU for tiny batches (transfer overhead dominates)
+  min_patterns_for_gpu: 32

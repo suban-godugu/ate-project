@@ -1,0 +1,18 @@
+# FA-FR-008 wafer-level spatial analytics configuration
+schema_version: "1.0"
+wafer_diameter_mm: 300
+die_pitch_mm: 5.0
+grid_resolution: 25
+hotspot_density_threshold: 0.15
+hotspot_min_dies: 3
+dbscan_eps: 2.5
+dbscan_min_samples: 3
+edge_radius_ratio: 0.67
+center_radius_ratio: 0.34
+radial_bins: 8
+anomaly_contamination: 0.05
+coordinate_system: die_xy
+layouts:
+  - round_300mm
+  - round_200mm
+  - custom_grid

@@ -1,0 +1,1 @@
+# Ensure alembic/versions is a package path for revision modules.

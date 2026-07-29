@@ -1,0 +1,10 @@
+fastapi>=0.135.2
+pydantic-settings>=2.13.1
+uvicorn[standard]>=0.42.0
+ijson>=3.5.1
+httpx>=0.28.1
+streamlit>=1.45.0
+pandas>=2.2.0
+lightgbm>=4.5.0
+scikit-learn>=1.5.0
+numpy>=2.0.0

@@ -1,0 +1,36 @@
+# FA-FR-010 failure summary & engineering reporting configuration
+schema_version: "1.0"
+performance:
+  report_generation_target_ms: 10000
+  pdf_generation_target_ms: 5000
+  excel_export_target_ms: 5000
+  dashboard_refresh_target_ms: 2000
+report:
+  title: Failure Analysis Engineering Report
+  customer_name: Semiconductor Manufacturing
+  template_path: backend/reporting/templates/engineering_report.html.j2
+  include_traceability: true
+  include_charts: true
+sections:
+  executive_summary: true
+  engineering_summary: true
+  failure_trend_summary: true
+  yield_summary: true
+  top_failure_modes: true
+  lot_summary: true
+  wafer_summary: true
+  die_summary: true
+  root_cause_summary: true
+  corrective_actions: true
+  engineering_observations: true
+export:
+  storage_dir: backend/storage/reports
+  pdf_enabled: true
+  excel_enabled: true
+  json_enabled: true
+  html_enabled: true
+  csv_enabled: true
+production_gates:
+  min_completeness_score: 0.85
+  min_consistency_score: 0.80
+  require_all_upstream_audits: true

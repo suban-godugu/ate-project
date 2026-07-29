@@ -1,0 +1,90 @@
+{
+  "generated_at": "2026-07-06T13:34:25Z",
+  "checks": [
+    {
+      "check": "Fixtures present",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "API health",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "check": "Login",
+      "pass": true,
+      "detail": "alex@verilumen.ai"
+    },
+    {
+      "check": "STDF upload completed",
+      "pass": true,
+      "detail": "Completed"
+    },
+    {
+      "check": "LOG upload completed",
+      "pass": true,
+      "detail": "Completed"
+    },
+    {
+      "check": "upload_jobs updated",
+      "pass": true,
+      "detail": "6 -> 8"
+    },
+    {
+      "check": "scan_chain_failures populated",
+      "pass": true,
+      "detail": "12 -> 16"
+    },
+    {
+      "check": "Real parser chain IDs",
+      "pass": true,
+      "detail": "[('Scan', None), ('scan', 'pattern'), ('scan', 'pattern')]"
+    },
+    {
+      "check": "ai_log_summaries populated",
+      "pass": true,
+      "detail": "6 -> 8"
+    },
+    {
+      "check": "STDF AI summary values",
+      "pass": true,
+      "detail": "patterns=1 chains=1 yield=94.00"
+    },
+    {
+      "check": "MinIO original file",
+      "pass": true,
+      "detail": "data/2026/07/1c37933b-bfb9-43b1-bfaf-0b990bccd4ab/sample.stdf"
+    },
+    {
+      "check": "MinIO parsed JSON",
+      "pass": true,
+      "detail": "job 1c37933b-bfb9-43b1-bfaf-0b990bccd4ab"
+    },
+    {
+      "check": "Redis job status keys",
+      "pass": true,
+      "detail": "stdf=True log=True"
+    },
+    {
+      "check": "Search index cache invalidated",
+      "pass": true,
+      "detail": "verilumen:search:index:v1"
+    },
+    {
+      "check": "Dashboard API responds",
+      "pass": true,
+      "detail": "status=200 rows=16"
+    },
+    {
+      "check": "Search index refreshed",
+      "pass": true,
+      "detail": "20 items"
+    },
+    {
+      "check": "Upload audit log written",
+      "pass": true,
+      "detail": "upload_started, upload_completed, parser_started, parser_completed"
+    }
+  ]
+}

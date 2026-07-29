@@ -1,0 +1,36 @@
+adapter_id: generic_datalog
+format: datalog_ascii
+detect:
+  regex_lines: ["^LOT_ID\s*:", "^DIE_ID\s*:"]
+header_fields:
+  lot_id:
+    regex: "^LOT_ID\s*:\s*(.+)$"
+  wafer_id:
+    regex: "^WAFER_ID\s*:\s*(.+)$"
+  die_id:
+    regex: "^DIE_ID\s*:\s*(.+)$"
+  product_id:
+    regex: "^PRODUCT_ID\s*:\s*(.+)$"
+  tester_id:
+    regex: "^TESTER_ID\s*:\s*(.+)$"
+    default: "UNKNOWN"
+  test_stage:
+    regex: "^TEST_STAGE\s*:\s*(.+)$"
+    default: "CP"
+  timestamp:
+    regex: "^TIMESTAMP\s*:\s*(.+)$"
+record_fields:
+  pass_fail:
+    regex: "^RESULT\s*:\s*(PASS|FAIL)$"
+  hard_bin:
+    regex: "^HARD_BIN\s*:\s*(.+)$"
+  soft_bin:
+    regex: "^SOFT_BIN\s*:\s*(.+)$"
+  failing_patterns:
+    regex: "^FAILING_PATTERNS\s*:\s*(.+)$"
+  failing_tests:
+    regex: "^FAILING_TESTS\s*:\s*(.+)$"
+  x:
+    regex: "^DIE_X\s*:\s*(\d+)$"
+  y:
+    regex: "^DIE_Y\s*:\s*(\d+)$"

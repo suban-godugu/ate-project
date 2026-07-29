@@ -1,0 +1,84 @@
+name: WaferVision-AI CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend:
+    name: Backend lint & tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # CPU torch wheels for CI speed
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+
+      - name: Lint (flake8)
+        run: flake8 src tests scripts
+
+      - name: Format check (black / isort)
+        run: |
+          black --check src tests scripts
+          isort --check-only src tests scripts
+
+      - name: Type check (mypy)
+        run: mypy src || true
+
+      - name: Unit & contract tests
+        run: pytest tests/test_spatial_unit.py tests/test_frontend_service_contract.py -q
+
+      - name: API system tests (skip if no model)
+        run: pytest tests/test_api_system.py tests/test_pipeline_integration.py -q
+        continue-on-error: true
+
+  frontend:
+    name: Frontend build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install
+        run: npm ci || npm install
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
+
+  docker:
+    name: Docker build (backend image)
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build backend image
+        run: docker build -t wafervision-backend:ci .
+      - name: Upload image artifact id
+        run: echo "wafervision-backend:ci" > artifact-name.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-tag
+          path: artifact-name.txt

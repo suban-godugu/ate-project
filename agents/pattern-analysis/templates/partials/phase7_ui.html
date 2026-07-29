@@ -1,0 +1,186 @@
+      <!-- REDUNDANCY TAB (PHASE 7) -->
+      <div class="tab-content" id="tab-redundancy">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          <div class="diag-summary-card">
+            <div class="diag-summary-label">Total Candidates</div>
+            <div class="diag-summary-value" id="red-total-candidates">-</div>
+          </div>
+          <div class="diag-summary-card">
+            <div class="diag-summary-label">Clusters Evaluated</div>
+            <div class="diag-summary-value" id="red-clusters-evaluated" style="color: #60a5fa;">-</div>
+          </div>
+          <div class="diag-summary-card">
+            <div class="diag-summary-label">Similarity Threshold</div>
+            <div class="diag-summary-value" id="red-similarity-threshold">-</div>
+          </div>
+          <div class="diag-summary-card">
+            <div class="diag-summary-label">Validation Status</div>
+            <div class="diag-summary-value" id="red-validation-status">-</div>
+          </div>
+          <div class="diag-summary-card">
+            <div class="diag-summary-label">Embedding Version</div>
+            <div class="diag-summary-value" id="red-embedding-version" style="color: #fbbf24;">-</div>
+          </div>
+          <div class="diag-summary-card">
+            <div class="diag-summary-label">Cluster Version</div>
+            <div class="diag-summary-value" id="red-cluster-version" style="color: #a78bfa;">-</div>
+          </div>
+          <div class="diag-summary-card">
+            <div class="diag-summary-label">Candidates Per Cluster Avg</div>
+            <div class="diag-summary-value" id="red-candidates-per-cluster-avg">-</div>
+          </div>
+        </div>
+
+        <div class="diag-panel red-explorer-toolbar">
+          <div class="diag-panel-title">Search &amp; Filters</div>
+          <div class="red-toolbar-grid">
+            <div>
+              <label class="red-toolbar-label" for="red-search-input">Search</label>
+              <input type="text" class="filter-input" id="red-search-input" placeholder="Pattern A, Pattern B, or Cluster ID..." oninput="onRedSearchInput(event)">
+            </div>
+            <div>
+              <label class="red-toolbar-label" for="red-filter-confidence">Confidence</label>
+              <select class="filter-input" id="red-filter-confidence" onchange="onRedFilterChange()">
+                <option value="All">All</option>
+                <option value="Very High">Very High</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <div>
+              <label class="red-toolbar-label" for="red-filter-review-status">Review Status</label>
+              <select class="filter-input" id="red-filter-review-status" onchange="onRedFilterChange()">
+                <option value="All">All</option>
+                <option value="Pending Review">Pending Review</option>
+                <option value="Reviewed">Reviewed</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+            <div>
+              <label class="red-toolbar-label" for="red-filter-label">Label</label>
+              <select class="filter-input" id="red-filter-label" onchange="onRedFilterChange()">
+                <option value="All">All</option>
+                <option value="Candidate for Review">Candidate for Review</option>
+                <option value="Duplicate">Duplicate</option>
+                <option value="False Positive">False Positive</option>
+                <option value="Accepted">Accepted</option>
+              </select>
+            </div>
+            <div>
+              <label class="red-toolbar-label" for="red-filter-cluster">Cluster</label>
+              <select class="filter-input" id="red-filter-cluster" onchange="onRedFilterChange()">
+                <option value="All">All</option>
+              </select>
+            </div>
+          </div>
+          <div class="red-export-row">
+            <button class="btn btn-secondary" type="button" onclick="exportRedCurrentView('csv')">Export Current View (CSV)</button>
+            <button class="btn btn-secondary" type="button" onclick="exportRedCurrentView('json')">Export Current View (JSON)</button>
+            <button class="btn btn-secondary" type="button" onclick="exportRedCurrentView('pdf')">Export Current View (PDF)</button>
+            <button class="btn btn-secondary" type="button" onclick="exportRedAll('csv')">Export All (CSV)</button>
+            <button class="btn btn-secondary" type="button" onclick="exportRedAll('json')">Export All (JSON)</button>
+            <button class="btn btn-secondary" type="button" onclick="exportRedAll('pdf')">Export All (PDF)</button>
+          </div>
+        </div>
+
+        <div class="diag-panel" style="margin-bottom: 20px;">
+          <div class="diag-panel-title">Redundancy Candidates</div>
+          <div class="table-container red-candidates-table-wrapper">
+            <table id="red-candidates-table">
+              <thead>
+                <tr>
+                  <th class="red-sortable" data-red-sort="pattern_a" onclick="onRedSortHeaderClick('pattern_a')">Pattern A<span class="red-sort-indicator" data-red-sort-indicator="pattern_a"></span></th>
+                  <th class="red-sortable" data-red-sort="pattern_b" onclick="onRedSortHeaderClick('pattern_b')">Pattern B<span class="red-sort-indicator" data-red-sort-indicator="pattern_b"></span></th>
+                  <th class="red-sortable" data-red-sort="cluster_id" onclick="onRedSortHeaderClick('cluster_id')">Cluster ID<span class="red-sort-indicator" data-red-sort-indicator="cluster_id"></span></th>
+                  <th class="red-sortable" data-red-sort="raw_similarity" onclick="onRedSortHeaderClick('raw_similarity')">Raw Similarity<span class="red-sort-indicator" data-red-sort-indicator="raw_similarity"></span></th>
+                  <th class="red-sortable" data-red-sort="confidence_score" onclick="onRedSortHeaderClick('confidence_score')">Confidence<span class="red-sort-indicator" data-red-sort-indicator="confidence_score"></span></th>
+                  <th>Confidence Source</th>
+                  <th class="red-sortable" data-red-sort="review_status" onclick="onRedSortHeaderClick('review_status')">Review Status<span class="red-sort-indicator" data-red-sort-indicator="review_status"></span></th>
+                  <th>Label</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div id="red-candidates-empty" style="display: none; padding: 16px; color: var(--color-text-muted); font-size: 14px;">
+            No redundancy candidates were exported by PA-FR-007.
+          </div>
+          <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding: 8px 16px; background: rgba(255,255,255,0.02); border-radius: 8px;">
+            <div class="pagination-info" id="red-pagination-info" style="font-size: 14px; color: var(--color-text-muted);">Showing 0 - 0 of 0 candidates</div>
+            <div class="pagination-buttons" style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary" onclick="prevRedPage()" id="btn-red-prev" style="padding: 6px 12px; font-size: 13px;">Previous</button>
+              <button class="btn btn-secondary" onclick="nextRedPage()" id="btn-red-next" style="padding: 6px 12px; font-size: 13px;">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 20px;">
+          <div class="diag-panel">
+            <div class="diag-panel-title">Validation Summary</div>
+            <div class="diag-validation-summary">
+              <div class="diag-validation-summary-item">
+                <div class="diag-summary-label">Total Checks</div>
+                <div class="diag-summary-value" id="red-val-total-checks">0</div>
+              </div>
+              <div class="diag-validation-summary-item">
+                <div class="diag-summary-label">Passed</div>
+                <div class="diag-summary-value diag-status-pass" id="red-val-passed">0</div>
+              </div>
+              <div class="diag-validation-summary-item">
+                <div class="diag-summary-label">Warnings</div>
+                <div class="diag-summary-value diag-status-warning" id="red-val-warnings">0</div>
+              </div>
+              <div class="diag-validation-summary-item">
+                <div class="diag-summary-label">Failed</div>
+                <div class="diag-summary-value diag-status-fail" id="red-val-failed">0</div>
+              </div>
+            </div>
+            <div class="table-container" style="margin-top: 16px;">
+              <table id="red-validation-table">
+                <thead>
+                  <tr>
+                    <th>Validation Rule</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="diag-panel">
+            <div class="diag-panel-title">Redundancy Manifest</div>
+            <div class="diag-manifest-list" id="red-manifest-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REDUNDANCY CANDIDATE DETAIL DRAWER -->
+      <div id="red-candidate-drawer" class="red-drawer-backdrop" style="display: none;" onclick="closeRedCandidateDrawerOnBackdrop(event)">
+        <div class="red-drawer-panel" onclick="event.stopPropagation()">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div class="red-drawer-title">Candidate Detail</div>
+            <button class="modal-close-btn" type="button" onclick="closeRedCandidateDrawer()">&times;</button>
+          </div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Pattern A</div><div class="red-drawer-value" id="red-drawer-pattern-a">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Pattern B</div><div class="red-drawer-value" id="red-drawer-pattern-b">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Cluster</div><div class="red-drawer-value" id="red-drawer-cluster">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Raw Similarity</div><div class="red-drawer-value" id="red-drawer-raw-similarity">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Confidence</div><div class="red-drawer-value red-confidence-cell" id="red-drawer-confidence">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Confidence Category</div><div class="red-drawer-value" id="red-drawer-confidence-category">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Embedding Version</div><div class="red-drawer-value" id="red-drawer-embedding-version">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Validation Status</div><div class="red-drawer-value" id="red-drawer-validation-status">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Review Status</div><div class="red-drawer-value" id="red-drawer-review-status">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Label</div><div class="red-drawer-value" id="red-drawer-label">-</div></div>
+          <div class="red-drawer-reserved">
+            <div class="diag-panel-title" style="margin-bottom: 12px;">Test Outcome (Reserved)</div>
+            <div class="red-drawer-field"><div class="red-drawer-label">Latest Test Outcome</div><div class="red-drawer-value">Available once PA-FR-009 is integrated</div></div>
+            <div class="red-drawer-field"><div class="red-drawer-label">PASS Count</div><div class="red-drawer-value">Available once PA-FR-009 is integrated</div></div>
+            <div class="red-drawer-field"><div class="red-drawer-label">FAIL Count</div><div class="red-drawer-value">Available once PA-FR-009 is integrated</div></div>
+            <div class="red-drawer-field"><div class="red-drawer-label">History</div><div class="red-drawer-value">Available once PA-FR-009 is integrated</div></div>
+          </div>
+        </div>
+      </div>
+

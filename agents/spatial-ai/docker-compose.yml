@@ -1,0 +1,37 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${WAFERVISION_API_PORT:-8000}:8000"
+    environment:
+      WAFERVISION_ENV: production
+      WAFERVISION_API_HOST: 0.0.0.0
+      WAFERVISION_API_PORT: 8000
+      WAFERVISION_ALLOWED_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
+      WAFERVISION_MODEL_PATH: models/resnet50_layer4_ft.pth
+      WAFERVISION_LOG_LEVEL: INFO
+    volumes:
+      - ./models:/app/models:ro
+      - ./logs:/app/logs
+      - ./temp:/app/temp
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    ports:
+      - "${WAFERVISION_FRONTEND_PORT:-3000}:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy

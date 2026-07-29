@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-base-950: #070910;
+  --color-base-900: #090b12;
+  --color-base-850: #10131d;
+  --color-base-800: #151926;
+  --color-base-700: #1e2334;
+  --color-base-600: #2a3145;
+
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+
+  --color-ink-100: #e9edf7;
+  --color-ink-200: #c2c9dc;
+  --color-ink-300: #8e97ae;
+  --color-ink-400: #646d84;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-base-900 text-ink-100 font-sans antialiased;
+    background-image:
+      radial-gradient(900px 420px at 10% -10%, rgba(99, 102, 241, 0.16), transparent 55%),
+      radial-gradient(700px 360px at 95% 0%, rgba(79, 70, 229, 0.10), transparent 50%);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #2a3145 transparent;
+  }
+}
+
+@layer utilities {
+  .card {
+    @apply rounded-xl border border-white/8 bg-base-850/80 backdrop-blur-sm;
+  }
+
+  .card-hover {
+    @apply transition duration-200 hover:border-brand-500/40;
+  }
+
+  .num {
+    @apply font-mono tabular-nums;
+  }
+}

@@ -1,0 +1,23 @@
+schema_version: "1.0"
+formula_version: "failure-rate-v1.0"
+default_window_size: 5
+default_aggregation_levels:
+  - pattern
+  - device
+  - die
+  - wafer
+  - lot
+  - test_program
+  - batch
+thresholds:
+  - configuration_key: global-default
+    version: "2026.07.1"
+    warning_percentage: 5.0
+    critical_percentage: 10.0
+    abnormal_delta_percentage: 2.0
+  - configuration_key: critical-pattern
+    version: "2026.07.1"
+    aggregation_level: pattern
+    warning_percentage: 2.0
+    critical_percentage: 5.0
+    abnormal_delta_percentage: 1.0

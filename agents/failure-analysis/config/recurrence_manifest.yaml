@@ -1,0 +1,44 @@
+# FA-FR-005 recurrence detection (reviewer-resolved spec)
+schema_version: "1.0"
+defaults:
+  min_entities: 3
+  failure_share_threshold: 0.40
+  equipment_rate_multiplier: 3.0
+signatures:
+  pattern:
+    enabled: true
+    scope: lot
+    min_entities: 2
+    label: Pattern recurrence
+    recommendation: Investigate scan-chain or test-program stability for this pattern across lots.
+  bin:
+    enabled: true
+    scope: lot
+    min_entities: 3
+    label: Bin recurrence
+    recommendation: Review bin definition and upstream process for repeated hard-bin failures.
+  die_position:
+    enabled: true
+    scope: wafer
+    min_entities: 3
+    label: Die-position recurrence
+    recommendation: Check reticle or spatial process signature at repeated wafer coordinates.
+  wafer_slot:
+    enabled: true
+    scope: lot
+    min_entities: 3
+    label: Wafer-slot recurrence
+    recommendation: Inspect carrier slot or lot sequencing bias for the same wafer index.
+  equipment:
+    enabled: true
+    scope: fleet
+    multiplier: 3.0
+    label: Equipment recurrence
+    recommendation: Audit tester calibration, probe card, and handler for elevated failure rate.
+  temporal:
+    enabled: true
+    scope: shift
+    min_entities: 3
+    shift_hours: 8
+    label: Temporal recurrence
+    recommendation: Correlate spike with shift, operator, or environmental change during the window.

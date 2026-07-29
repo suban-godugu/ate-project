@@ -1,0 +1,31 @@
+    /* PA-UI-009 PHASE 9 UI */
+    .red-drawer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1200; display: flex; justify-content: flex-end; align-items: stretch; }
+    .red-drawer-panel { width: min(420px, 92vw); background: #12151b; border-left: 1px solid var(--card-border); padding: 20px; overflow-y: auto; }
+    .red-drawer-title { font-size: 16px; font-weight: 600; }
+    .red-drawer-field { margin-bottom: 12px; }
+    .red-drawer-label { font-size: 11px; color: var(--color-text-muted); text-transform: uppercase; margin-bottom: 4px; }
+    .red-drawer-value { font-size: 13px; white-space: pre-wrap; word-break: break-word; font-family: var(--font-mono); }
+    .red-drawer-reserved { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .red-toolbar-label { display: block; font-size: 12px; color: var(--color-text-muted); margin-bottom: 6px; }
+    .corr-explorer-toolbar { margin-bottom: 16px; }
+    .corr-toolbar-grid { display: grid; grid-template-columns: minmax(220px, 1.4fr) repeat(4, minmax(140px, 1fr)); gap: 12px; align-items: end; }
+    .corr-outcomes-table-wrapper { max-height: 460px; }
+    .corr-outcomes-table-wrapper table tbody tr { cursor: pointer; }
+    .corr-outcomes-table-wrapper table tbody tr:hover td { background: rgba(59, 130, 246, 0.08); }
+    .corr-outcomes-table-wrapper table tbody tr.corr-row-selected td { background: rgba(59, 130, 246, 0.14); }
+    th.corr-sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+    .corr-sort-indicator { margin-left: 4px; font-size: 10px; color: #60a5fa; }
+    .corr-flag-cell { font-size: 12px; }
+    .corr-analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+    .corr-analytics-health-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+    .corr-insights-list { display: flex; flex-direction: column; gap: 10px; }
+    .corr-insight-item { padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
+    .clu-chart-stage { position: relative; width: 100%; }
+    .clu-chart-svg { width: 100%; height: auto; min-height: 220px; display: block; }
+    .clu-chart-tooltip { position: absolute; pointer-events: none; z-index: 5; display: none; min-width: 160px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(15,18,24,0.96); font-size: 12px; }
+    .clu-chart-empty { padding: 16px; color: var(--color-text-muted); font-size: 13px; text-align: center; }
+    .clu-chart-legend { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+    .clu-chart-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-text-muted); }
+    .clu-chart-legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .corr-bar-chart-label { font-size: 10px; fill: var(--color-text-muted); }
+    .corr-bar-chart-value { font-size: 10px; fill: var(--color-text-normal); }

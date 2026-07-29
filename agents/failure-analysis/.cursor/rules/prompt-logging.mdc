@@ -1,0 +1,24 @@
+---
+description: Log every user prompt to prompt_log.csv and PROMPT_LOG.md
+alwaysApply: true
+---
+
+# Prompt Logging
+
+Every user prompt in this project is recorded automatically.
+
+## How it works
+
+1. **Cursor hook** (`beforeSubmitPrompt`) runs on each message you send.
+2. **User-level hook** at `~/.cursor/hooks.json` logs from any workspace.
+3. **Project hook** at `.cursor/hooks.json` ensures logs land in this repo.
+
+## Log files
+
+| File | Contents |
+|------|----------|
+| `prompt_log.csv` | Index: id, timestamp, preview, archive path, char count |
+| `PROMPT_LOG.md` | Human-readable index with links |
+| `prompt_archive/PR-####.md` | Full prompt text |
+
+If the hook does not run (rare), the agent must append manually using the same format.

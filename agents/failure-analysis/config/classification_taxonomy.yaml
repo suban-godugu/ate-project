@@ -1,0 +1,134 @@
+# FA-FR-004 enterprise fault taxonomy (customer-configurable)
+schema_version: "2.0"
+unclassified_label: Unknown Failure
+categories:
+  - Functional Failure
+  - Parametric Failure
+  - Electrical Failure
+  - Mechanical Failure
+  - Leakage Failure
+  - Timing Failure
+  - Voltage Failure
+  - Current Failure
+  - Memory Failure
+  - Open Circuit
+  - Short Circuit
+  - Unknown Failure
+category_definitions:
+  Functional Failure: Logic, transition, or functional test failure.
+  Parametric Failure: Parametric limit violation without specific electrical subtype.
+  Electrical Failure: General electrical defect not covered by a more specific category.
+  Mechanical Failure: Physical mechanical damage or assembly defect.
+  Leakage Failure: IDDQ high or leakage current signature.
+  Timing Failure: Setup/hold slack violation or timing-related hint.
+  Voltage Failure: Supply or IR-drop related voltage anomaly.
+  Current Failure: Excessive current draw or current limit violation.
+  Memory Failure: Memory BIST or memory-related bin/test mapping.
+  Open Circuit: Open net or floating signal signature.
+  Short Circuit: Short or bridge defect signature.
+  Unknown Failure: No rule, ML, or LLM classification matched.
+thresholds:
+  ir_drop_mv: 50
+  thermal_c: 80
+  timing_slack_ps: 0
+  current_ma: 100
+rules:
+  - name: customer_bin_leakage
+    when: {field: hard_bin, in: ["5", "12"]}
+    category: Leakage Failure
+  - name: customer_bin_memory
+    when: {field: hard_bin, in: ["7", "15"]}
+    category: Memory Failure
+  - name: customer_bin_open
+    when: {field: hard_bin, in: ["3", "9"]}
+    category: Open Circuit
+  - name: customer_bin_short
+    when: {field: hard_bin, in: ["4", "10"]}
+    category: Short Circuit
+  - name: ir_drop_hint
+    when: {field: ROOT_CAUSE_HINT, contains: IR_DROP}
+    category: Voltage Failure
+  - name: setup_hold_hint
+    when: {field: ROOT_CAUSE_HINT, contains: SETUP_TIMING}
+    category: Timing Failure
+  - name: hold_hint
+    when: {field: ROOT_CAUSE_HINT, contains: HOLD_FAILURE}
+    category: Timing Failure
+  - name: thermal_hint
+    when: {field: ROOT_CAUSE_HINT, contains: THERMAL}
+    category: Parametric Failure
+  - name: hotspot_region
+    when: {field: FAILURE_REGION, contains: HOTSPOT}
+    category: Parametric Failure
+  - name: fail_type_str
+    when: {field: FAIL_TYPE, equals: STR}
+    category: Functional Failure
+  - name: fail_type_scan_shift
+    when: {field: FAIL_TYPE, equals: SCAN_SHIFT}
+    category: Functional Failure
+  - name: failing_test_iddq
+    when: {field: failing_test, contains: IDDQ}
+    category: Leakage Failure
+  - name: failing_test_memory
+    when: {field: failing_test, contains: MEMORY}
+    category: Memory Failure
+  - name: failing_test_scan
+    when: {field: failing_test, contains: SCAN}
+    category: Functional Failure
+  - name: failing_test_voltage
+    when: {field: failing_test, contains: VDD}
+    category: Voltage Failure
+  - name: failing_test_current
+    when: {field: failing_test, contains: ICC}
+    category: Current Failure
+  - name: negative_setup_slack
+    when: {field: SETUP_SLACK_PS, lt: 0}
+    category: Timing Failure
+  - name: negative_hold_slack
+    when: {field: HOLD_SLACK_PS, lt: 0}
+    category: Timing Failure
+  - name: ir_drop_threshold
+    when: {field: IR_DROP_MV, gte: 50}
+    category: Voltage Failure
+  - name: thermal_threshold
+    when: {field: THERMAL_C, gte: 80}
+    category: Parametric Failure
+  - name: transition_faults
+    when: {field: TRANSITION_FAULTS, gt: 0}
+    category: Functional Failure
+  - name: open_hint
+    when: {field: ROOT_CAUSE_HINT, contains: OPEN}
+    category: Open Circuit
+  - name: short_hint
+    when: {field: ROOT_CAUSE_HINT, contains: SHORT}
+    category: Short Circuit
+  - name: mechanical_hint
+    when: {field: ROOT_CAUSE_HINT, contains: MECHANICAL}
+    category: Mechanical Failure
+legacy_category_map:
+  Electrical: Electrical Failure
+  Functional: Functional Failure
+  "Scan Chain": Functional Failure
+  Memory: Memory Failure
+  Timing: Timing Failure
+  "Open Circuit": Open Circuit
+  "Short Circuit": Short Circuit
+  Leakage: Leakage Failure
+  "Power/Ground": Voltage Failure
+  "Process-Induced": Parametric Failure
+  "Mechanical Defect": Mechanical Failure
+  Unclassified: Unknown Failure
+  UNKNOWN: Unknown Failure
+engineering_recommendations:
+  Functional Failure: Review scan chain diagnostics and transition fault bitmaps.
+  Parametric Failure: Inspect process corners and thermal distribution on affected wafers.
+  Electrical Failure: Run electrical isolation and netlist correlation on failing dies.
+  Mechanical Failure: Initiate physical FA sample pull for mechanical inspection.
+  Leakage Failure: Correlate IDDQ bins with leakage test limits and retest at reduced VDD.
+  Timing Failure: Re-run STA correlation and check clock tree integrity on failing lot.
+  Voltage Failure: Analyze IR drop maps and power grid integrity for affected region.
+  Current Failure: Validate current limit settings and PMIC load conditions.
+  Memory Failure: Run memory BIST diagnostics and bit-cell repair analysis.
+  Open Circuit: Perform net open localization using fault isolation tools.
+  Short Circuit: Run short isolation and metal layer inspection on suspect dies.
+  Unknown Failure: Escalate to senior FA engineer for manual classification review.

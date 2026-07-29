@@ -1,0 +1,47 @@
+# FA-FR-009 production fault-type prediction configuration
+schema_version: "2.0"
+config_version: "fault-prediction-v2.0"
+requirement: "FA-FR-009"
+algorithm: "rule_based_explainable_scoring"
+batch_size: 10000
+model:
+  model_version: "rule-v2.0"
+  model_type: "rule_based"
+  top_k_alternatives: 5
+thresholds:
+  minimum_confidence: 0.35
+  high_confidence: 0.75
+  minimum_probability: 0.05
+  recurrence_boost: 0.12
+  correlation_boost: 0.15
+  failure_rate_boost: 0.10
+  die_severity_boost: 0.08
+  wafer_health_penalty: 0.06
+  min_sample_size: 1
+scoring_weights:
+  correlation: 0.30
+  recurrence: 0.20
+  classification: 0.20
+  failure_rate: 0.15
+  die_analytics: 0.10
+  wafer_analytics: 0.05
+upstream:
+  require_normalization: true
+  require_pattern_detection: true
+  require_failure_rates: true
+  require_fault_classification: true
+  require_recurrence: true
+  require_correlation: true
+  require_die_analysis: true
+  require_wafer_analysis: true
+cohort:
+  require_same_tenant: true
+  require_product_overlap: true
+  require_test_stage_overlap: true
+  compatible_formula_prefix: "failure-rate-v1"
+feedback:
+  enabled: true
+  default_learning_weight: 1.0
+performance:
+  target_latency_ms: 2000
+  max_patterns_per_batch: 50000

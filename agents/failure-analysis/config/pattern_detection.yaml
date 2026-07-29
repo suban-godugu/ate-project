@@ -1,0 +1,16 @@
+# FA-FR-002 pattern detection engine configuration
+schema_version: "1.0"
+similarity_threshold: 0.75
+min_cluster_size: 2
+dbscan_eps: 0.45
+isolation_forest_contamination: 0.05
+top_patterns_limit: 50
+confidence_weights:
+  statistical: 0.60
+  clustering: 0.20
+  similarity: 0.20
+ranking_weights:
+  frequency: 0.35
+  density: 0.20
+  confidence: 0.30
+  anomaly_penalty: 0.15

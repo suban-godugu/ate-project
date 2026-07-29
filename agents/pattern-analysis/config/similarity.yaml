@@ -1,0 +1,25 @@
+similarity:
+  metric: cosine
+  response_time_budget_ms: 100
+  default_top_n: 10
+  max_top_n: 100
+  search_scope: global
+  cache_enabled: false
+  ann_enabled: false
+  display_precision: 3
+  categories:
+    identical:
+      min: 1.000
+      label: "Identical"
+    very_high:
+      min: 0.980
+      label: "Very High"
+    high:
+      min: 0.950
+      label: "High"
+    medium:
+      min: 0.900
+      label: "Medium"
+    low:
+      min: 0.000
+      label: "Low"

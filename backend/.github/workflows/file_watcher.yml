@@ -1,0 +1,25 @@
+name: File Ownership Watcher
+on:
+  push:
+    branches: [main]
+jobs:
+  check-owner:
+    runs-on: ubuntu-latest
+    if: github.actor != 'suban-godugu'
+    steps:
+      - name: Send Unauthorized Alert
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "UNAUTHORIZED CHANGE - ${{ github.actor }} modified Backend-and-DP-s!"
+          to: contact@verilumen.ai,lavanya@verilumen.ai,suban@verilumen.ai,suban@verilumen.ai
+          from: verilumen.noreply@gmail.com
+          body: |
+            WARNING - Unauthorized File Modification Detected!
+            Repository  : ${{ github.repository }}
+            Modified by : ${{ github.actor }}
+            Authorized  : suban-godugu only
+            View change : ${{ github.event.head_commit.url }}

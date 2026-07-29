@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #edf2f7;
+  --panel: #ffffff;
+  --line: #d5deea;
+  --text: #1a2433;
+  --muted: #5b6b7f;
+  --accent: #1f4e79;
+}
+
+.dark {
+  --bg: #0f1620;
+  --panel: #172131;
+  --line: #2a3a50;
+  --text: #e8eef7;
+  --muted: #9aabbf;
+  --accent: #7eb6ff;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% -10%, rgba(31, 78, 121, 0.12), transparent 42%),
+    linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 88%, #c9d7ea));
+  font-family: var(--font-sans), Segoe UI, sans-serif;
+}
+
+.panel {
+  @apply rounded-xl border shadow-panel;
+  background: var(--panel);
+  border-color: var(--line);
+}
+
+.panel-title {
+  @apply text-sm font-semibold tracking-wide uppercase;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+.skeleton {
+  @apply animate-pulse rounded-md;
+  background: color-mix(in srgb, var(--line) 70%, transparent);
+}

@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.env
+!.env.example
+
+# Node / frontends
+node_modules/
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs & temp
+*.log
+_tmp_*
+reference_docs_extracted.txt
+
+# Local data / uploads (regenerated at runtime)
+backend/storage/
+!backend/storage/.gitkeep
+
+# Test / coverage
+.coverage
+htmlcov/
+.pytest_cache/
+coverage/
+
+# Misc generated JSON (keep config JSON)
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!components.json
+!.cursor/hooks.json
+!ate-dashboard/package.json
+!ate-dashboard/package-lock.json
+!ate-dashboard/tsconfig.json
+!frontend/package.json
+!frontend/package-lock.json

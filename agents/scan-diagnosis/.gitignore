@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/.env.local
+frontend/.env*.local
+
+# Python API caches / tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local scratch / one-off scripts (not part of the product)
+scratch/
+prompt_history.md
+_check_*.py
+_count_out.txt
+_dash_*.json
+_retrain_script.py
+_run_live_diag.py
+_scan_*.js
+
+# Data & generated artifacts (not shipped in this repo)
+data/
+output/**
+!output/.gitkeep
+
+# Local PPT / export helpers (optional; not required to run)
+scripts/
+*.pptx

@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeSubmitPrompt": [
+      {
+        "command": "node .cursor/hooks/record-prompt-start.mjs",
+        "timeout": 10
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "node .cursor/hooks/track-file-edit.mjs",
+        "timeout": 5
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/record-prompt-stop.mjs",
+        "timeout": 10
+      }
+    ]
+  }
+}

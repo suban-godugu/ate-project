@@ -1,0 +1,38 @@
+analysis_session:
+  # Derived session summary metrics (computed from executions[] only).
+  pattern_chain_summary_metrics:
+    - execution_count
+    - pass_count
+    - fail_count
+    - toggle_coverage_pct_avg
+    - toggle_coverage_pct_max
+    - toggle_coverage_pct_min
+    - toggle_density_pct_avg
+
+  # Phase B: one embedding per (pattern_id, source_log). Options: per_execution.
+  embedding_strategy: per_execution
+
+  # PA-PERF-003: parallel E0 ATE parse + coverage.
+  # auto → min(cpu_count(), number_of_logs); 1 → exact serial path.
+  e0_parallel_workers: auto
+
+  # PA-PERF-005: reuse L1 artifacts when STIL/ATE/config/versions match.
+  # false → always cold rebuild (cache record still rewritten after success).
+  session_warm_cache: true
+
+  # Session clustering speed: agglomerative is O(n^2). Units above this are
+  # used only to learn centroids; every unit is then assigned to nearest centroid.
+  # clustering_max_units: 2500
+
+  # Session redundancy (Phase 7 Analysis Session): bounded nearest-neighbor pairs.
+  # Does not alter PA-FR-007 / config/redundancy.yaml behavior.
+  redundancy_neighbors_per_unit: 5
+  redundancy_candidates_per_cluster: 100
+  # PA-ARCH-002: blockwise exact cosine (avoids dense N×N allocation).
+  redundancy_block_size: 256
+  redundancy_parallel_clusters: 1
+
+  # Phase C: how session embeddings feed FR-006–008. Keep deferred until a
+  # dedicated multi-execution embedding design phase finalizes the policy.
+  # Do not use first_sorted_log — that ignores remaining selected ATE logs.
+  downstream_embedding_projection: deferred

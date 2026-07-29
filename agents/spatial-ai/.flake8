@@ -1,0 +1,14 @@
+# Flake8 — keep in sync with Black line length
+[flake8]
+max-line-length = 100
+extend-ignore = E203,W503
+exclude =
+    .venv,
+    venv,
+    frontend,
+    wafer dataset,
+    models,
+    __pycache__,
+    .git
+per-file-ignores =
+    tests/*: F401,F811

@@ -1,0 +1,44 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Env / secrets
+.env
+.env.local
+**/.env
+**/.env.local
+
+# Runtime data
+backend/data/
+data/
+
+# Node / Next (if present)
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+
+# Non-code artifacts
+*.zip
+*.docx
+*.pdf
+*.png
+*.jpg
+*.jpeg

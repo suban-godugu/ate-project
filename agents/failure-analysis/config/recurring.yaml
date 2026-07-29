@@ -1,0 +1,50 @@
+# FA-FR-005 recurring failure detection configuration
+schema_version: "1.0"
+defaults:
+  min_entities: 3
+  failure_share_threshold: 0.40
+  equipment_rate_multiplier: 3.0
+  similarity_threshold: 0.75
+  dbscan_eps: 0.45
+  min_cluster_size: 2
+correlations:
+  - failure_frequency
+  - lot_correlation
+  - wafer_correlation
+  - die_correlation
+  - device_correlation
+  - time_correlation
+  - product_correlation
+  - tester_correlation
+signatures:
+  pattern:
+    enabled: true
+    scope: lot
+    min_entities: 2
+    recommendation: Investigate scan-chain or test-program stability for this pattern across lots.
+  bin:
+    enabled: true
+    scope: lot
+    min_entities: 3
+    recommendation: Review bin definition and upstream process for repeated hard-bin failures.
+  die_position:
+    enabled: true
+    scope: wafer
+    min_entities: 3
+    recommendation: Check reticle or spatial process signature at repeated wafer coordinates.
+  wafer_slot:
+    enabled: true
+    scope: lot
+    min_entities: 3
+    recommendation: Inspect carrier slot or lot sequencing bias for the same wafer index.
+  equipment:
+    enabled: true
+    scope: fleet
+    multiplier: 3.0
+    recommendation: Audit tester calibration, probe card, and handler for elevated failure rate.
+  temporal:
+    enabled: true
+    scope: shift
+    min_entities: 3
+    shift_hours: 8
+    recommendation: Correlate spike with shift, operator, or environmental change during the window.

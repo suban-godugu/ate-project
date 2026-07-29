@@ -1,0 +1,3 @@
+# Optional ML dependencies for FA-FR-004 (rule layer works without these)
+scikit-learn>=1.3.0
+shap>=0.42.0

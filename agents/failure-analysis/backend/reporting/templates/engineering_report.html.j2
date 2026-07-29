@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>{{ metadata.report_title }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; color: #222; }
+    h1 { color: #1a365d; }
+    h2 { color: #2c5282; border-bottom: 1px solid #cbd5e0; padding-bottom: 0.25rem; }
+    table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+    th, td { border: 1px solid #e2e8f0; padding: 0.5rem; text-align: left; }
+    th { background: #edf2f7; }
+    .meta { color: #718096; font-size: 0.9rem; }
+    .headline { font-size: 1.1rem; font-weight: bold; margin: 1rem 0; }
+  </style>
+</head>
+<body>
+  <h1>{{ metadata.report_title }}</h1>
+  <p class="meta">
+    Generated: {{ metadata.generated_at }} |
+    Upload: {{ metadata.original_filename }} ({{ metadata.upload_id }})
+  </p>
+
+  <h2>Executive Summary</h2>
+  <p class="headline">{{ executive_summary.headline }}</p>
+  <table>
+    <tr><th>Metric</th><th>Value</th></tr>
+    <tr><td>Dies Tested</td><td>{{ executive_summary.total_dies_tested }}</td></tr>
+    <tr><td>Failing Dies</td><td>{{ executive_summary.total_failing_dies }}</td></tr>
+    <tr><td>Overall Yield %</td><td>{{ executive_summary.overall_yield_pct }}</td></tr>
+    <tr><td>Top Root Cause</td><td>{{ executive_summary.top_predicted_root_cause }}</td></tr>
+    <tr><td>Confidence</td><td>{{ executive_summary.top_prediction_confidence }}</td></tr>
+  </table>
+
+  <h2>Engineering Observations</h2>
+  <ul>
+  {% for obs in engineering_observations %}
+    <li>{{ obs }}</li>
+  {% endfor %}
+  </ul>
+
+  <h2>Recommended Corrective Actions</h2>
+  <table>
+    <tr><th>Priority</th><th>Action</th></tr>
+    {% for rec in recommended_corrective_actions[:15] %}
+    <tr><td>{{ rec.priority }}</td><td>{{ rec.action }}</td></tr>
+    {% endfor %}
+  </table>
+
+  <h2>Requirement Traceability</h2>
+  <p>FA-FR-001 through FA-FR-010 acceptance criteria included in JSON export.</p>
+</body>
+</html>

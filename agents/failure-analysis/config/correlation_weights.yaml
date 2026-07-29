@@ -1,0 +1,14 @@
+# FA-FR-006 multi-factor correlation weights (reviewer-resolved spec)
+schema_version: "1.0"
+high_risk_threshold: 0.75
+weights:
+  failure_frequency: 0.20
+  normalized_failure_rate: 0.15
+  uniqueness: 0.15
+  co_failure_lift: 0.15
+  spatial_concentration: 0.10
+  cross_lot_persistence: 0.25
+ranking_method: >
+  Composite correlation score is a weighted sum of normalized factor scores.
+  Each factor contribution is visible in factor_contributions for auditability
+  and downstream agent handoff.

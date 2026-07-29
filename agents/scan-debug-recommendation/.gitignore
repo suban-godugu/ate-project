@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets — use .env.example templates
+.env
+.env.local
+frontend/.env.local
+
+# Local debug logs (not scan failure dataset logs)
+/*.log
+.api*.log
+.fe*.log
+!scan debug data/failure logs/**/*.log
+
+# ML artifacts (trained automatically on API startup)
+scan debug data/ml_action_recommender.joblib
+scan debug data/kpi_ml_models.joblib
+
+# Generated one-off reports
+all_recommendations_report.json
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.vercel/
+frontend/coverage/
+frontend/*.tsbuildinfo
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Cursor / agent (local only)
+agent-transcripts/

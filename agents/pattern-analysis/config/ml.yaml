@@ -1,0 +1,30 @@
+ml:
+  # Layer 3 advisory inference. Off by default — never mutates L1 artifacts.
+  enabled: true
+  allow_experimental: true
+  models_root: models
+  models:
+    pa_ml_001:
+      enabled: true
+      version: v0.1.0
+    pa_ml_001_lot:
+      enabled: true
+      version: v0.1.0
+    pa_ml_002:
+      enabled: true
+      version: v0.1.0
+    pa_ml_002_lot:
+      enabled: true
+      version: v0.1.0
+    pa_ml_003:
+      enabled: true
+      version: v0.1.0
+    pa_ml_003_lot:
+      enabled: true
+      version: v0.1.0
+    pa_ml_004:
+      enabled: true
+      version: v0.1.0
+    pa_ml_004_lot:
+      enabled: true
+      version: v0.1.0

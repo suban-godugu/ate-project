@@ -1,0 +1,57 @@
+name: Repo Governance
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '15 11 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  ownership-watcher:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if committer is the owner
+        id: check
+        run: |
+          if [ "${{ github.actor }}" != "${{ vars.OWNER_USERNAME }}" ]; then
+            echo "unauthorized=true" >> $GITHUB_OUTPUT
+          else
+            echo "unauthorized=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send warning email
+        if: steps.check.outputs.unauthorized == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "⚠️ Unauthorized Change in ${{ github.repository }}"
+          to: ${{ vars.ADMIN_EMAILS }}
+          from: GitHub Watcher
+          body: |
+            ⚠️ WARNING — Unauthorized Change!
+            Repository: ${{ github.repository }}
+            Modified by: ${{ github.actor }}
+            Commit: ${{ github.sha }}
+            This repo belongs to ${{ vars.OWNER_USERNAME }} only!
+
+  eod-reminder:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send EOD reminder
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "⏰ EOD Push Reminder — ${{ github.repository }}"
+          to: ${{ vars.ADMIN_EMAILS }}
+          from: GitHub Reminder
+          body: |
+            Reminder: please push today's work to ${{ github.repository }} before end of day.

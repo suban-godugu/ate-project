@@ -1,0 +1,35 @@
+# FA-FR-007 production die-level failure analysis configuration
+schema_version: "2.0"
+config_version: "die-analysis-v2.0"
+requirement: "FA-FR-007"
+algorithm: "grid_union_find"
+batch_size: 10000
+thresholds:
+  hotspot_density: 0.15
+  hotspot_min_dies: 3
+  cluster_eps: 2.5
+  cluster_min_samples: 3
+  grid_cell_size: 1.0
+  neighbor_radius: 1.5
+  isolated_neighbor_max: 0
+  minimum_confidence: 0.55
+  health_critical: 0.35
+  health_high: 0.55
+  health_medium: 0.75
+  trend_delta: 0.05
+  minimum_sample_size: 1
+upstream:
+  require_normalization: true
+  require_pattern_detection: true
+  require_failure_rates: true
+  require_fault_classification: true
+  require_recurrence: true
+  require_correlation: true
+cohort:
+  require_same_tenant: true
+  require_product_overlap: true
+  require_test_stage_overlap: true
+  compatible_formula_prefix: "failure-rate-v1"
+performance:
+  target_latency_ms: 2000
+  max_coordinate_export: 500

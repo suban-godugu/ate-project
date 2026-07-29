@@ -1,0 +1,27 @@
+# FA-FR-009 root cause prediction engine configuration
+schema_version: "1.0"
+performance:
+  prediction_target_ms: 5000
+  semantic_search_target_ms: 2000
+  api_response_target_ms: 2000
+models:
+  enable_ml: true
+  prefer_xgboost: true
+  ml_min_training_samples: 4
+  enable_llm: true
+  llm_model: gpt-4o-mini
+rag:
+  top_k: 5
+  similarity_threshold: 0.35
+  embedding_model: all-MiniLM-L6-v2
+  use_faiss: true
+  knowledge_base_path: config/root_cause_knowledge.yaml
+confidence:
+  baseline_weight: 0.30
+  ml_weight: 0.30
+  rag_weight: 0.20
+  llm_weight: 0.20
+prediction:
+  top_n: 50
+  recurring_min_lots: 2
+  include_ranked_queue: 20

@@ -1,0 +1,35 @@
+schema_version: "1.0"
+config_version: "recurrence-v2.0"
+algorithm: rule_based
+requirement: "FA-FR-005"
+upstream:
+  require_fault_classification: true
+cohort:
+  require_same_tenant: true
+  require_product_overlap: true
+  require_test_stage_overlap: true
+  compatible_formula_prefix: "failure-rate-v1"
+minimum:
+  occurrences: 2
+  distinct_executions: 2
+  distinct_datasets: 2
+thresholds:
+  similarity: 0.72
+  hotspot_radius: 1.5
+  hotspot_min_occurrences: 2
+  emerging_frequency: 0.02
+  trend_delta: 0.01
+  high_confidence: 0.85
+  critical_frequency: 0.20
+weights:
+  occurrence: 0.30
+  execution_coverage: 0.25
+  dataset_coverage: 0.20
+  source_confidence: 0.15
+  failure_rate: 0.10
+recommendations:
+  worsening: "Escalate the pattern for cross-lot root-cause analysis and review the latest process or test-program changes."
+  hotspot: "Inspect the repeated wafer coordinates for reticle, probe-card, chuck, or localized process signatures."
+  device: "Compare device revisions, test programs, and tester configurations for a shared systematic mechanism."
+  stable: "Continue monitoring and correlate the persistent signature with equipment, material, and process history."
+  emerging: "Start containment and engineering review; this signature is newly recurring relative to the historical baseline."

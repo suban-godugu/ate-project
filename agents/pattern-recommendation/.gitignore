@@ -1,0 +1,54 @@
+# -----------------------------
+# Source-only repository policy
+# -----------------------------
+
+# Input / output datasets and generated artifacts
+data/
+outputs/
+ml/data/
+ml/artifacts/
+
+# Python cache/build/runtime
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+
+# Node / frontend generated files
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# Logs / temp / pid files
+*.log
+*.tmp
+*.temp
+*.pid
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+
+# Local secrets / env files
+.env
+.env.*
+!.env.example

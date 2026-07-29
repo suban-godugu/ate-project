@@ -1,0 +1,4 @@
+# Optional GPU acceleration (PA-FR-008 batch cosine / optional FR-006 pdist)
+# Install with:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu128
+torch>=2.11.0

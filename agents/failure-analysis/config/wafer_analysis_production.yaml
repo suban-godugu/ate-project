@@ -1,0 +1,36 @@
+# FA-FR-008 production wafer-level failure analysis configuration
+schema_version: "2.0"
+config_version: "wafer-analysis-v2.0"
+requirement: "FA-FR-008"
+algorithm: "deterministic_grid_aggregate"
+batch_size: 10000
+thresholds:
+  hotspot_density: 0.15
+  hotspot_min_dies: 3
+  grid_cell_size: 1.0
+  edge_radius_fraction: 0.67
+  center_radius_fraction: 0.34
+  radial_bins: 8
+  minimum_confidence: 0.55
+  health_critical: 0.35
+  health_high: 0.55
+  health_medium: 0.75
+  trend_delta: 0.05
+  minimum_sample_size: 1
+  yield_outlier_delta: 10.0
+upstream:
+  require_normalization: true
+  require_pattern_detection: true
+  require_failure_rates: true
+  require_fault_classification: true
+  require_recurrence: true
+  require_correlation: true
+  require_die_analysis: true
+cohort:
+  require_same_tenant: true
+  require_product_overlap: true
+  require_test_stage_overlap: true
+  compatible_formula_prefix: "failure-rate-v1"
+performance:
+  target_latency_ms: 3000
+  max_grid_export: 500

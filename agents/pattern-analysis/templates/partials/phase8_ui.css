@@ -1,0 +1,113 @@
+    /* PA-UI-008 PHASE 8 UI */
+    /* PA-UI-008.1 Similarity Explorer */
+    .sim-explorer-toolbar {
+      margin-bottom: 16px;
+    }
+
+    .sim-topn-table-wrapper {
+      max-height: 460px;
+    }
+
+    .sim-topn-table-wrapper table tbody tr {
+      cursor: pointer;
+    }
+
+    .sim-topn-table-wrapper table tbody tr:hover td {
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    .sim-topn-table-wrapper table tbody tr.sim-topn-row-selected td {
+      background: rgba(59, 130, 246, 0.14);
+    }
+
+    .sim-similarity-cell {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .sim-placeholder-cell {
+      color: var(--color-text-muted);
+      font-style: italic;
+      font-size: 12px;
+    }
+
+    th.sim-sortable {
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    th.sim-sortable:hover {
+      color: var(--color-text-normal);
+    }
+
+    .sim-sort-indicator {
+      margin-left: 4px;
+      font-size: 10px;
+      color: #60a5fa;
+    }
+    .sim-combobox {
+      position: relative;
+      width: 100%;
+    }
+
+    .sim-combobox-anchor {
+      position: relative;
+      width: 100%;
+    }
+
+    .sim-combobox-input {
+      width: 100%;
+    }
+
+    .sim-combobox-input:focus {
+      border-color: rgba(96, 165, 250, 0.45);
+      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.12);
+    }
+
+    .sim-combobox-listbox {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      z-index: 40;
+      margin: 0;
+      padding: 4px 0;
+      list-style: none;
+      background: rgba(18, 22, 28, 0.98);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+      max-height: 320px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .sim-combobox-listbox.open {
+      display: block;
+    }
+
+    .sim-combobox-option {
+      padding: 8px 12px;
+      font-size: 14px;
+      font-family: var(--font-mono);
+      color: var(--color-text-main);
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sim-combobox-option:hover,
+    .sim-combobox-option.active {
+      background: rgba(96, 165, 250, 0.12);
+      color: #93c5fd;
+    }
+
+    .sim-combobox-empty {
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+

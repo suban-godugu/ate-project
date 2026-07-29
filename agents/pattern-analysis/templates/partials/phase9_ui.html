@@ -1,0 +1,114 @@
+      <!-- CORRELATION TAB (PHASE 9) -->
+      <div class="tab-content" id="tab-correlation">
+        <div class="diag-panel" style="margin-bottom: 20px;">
+          <div class="diag-panel-title">Pattern Outcome Correlation (PA-FR-009)</div>
+          <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 16px;">
+            Correlates PA-FR-004 scan chain metadata with normalized ATE pass/fail history using the composite join key (pattern_id, scan_chain_id).
+          </p>
+          <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="corr-run-btn" onclick="runPatternOutcomeCorrelation()">Run Correlation</button>
+          </div>
+          <div id="corr-error" style="display: none; margin-bottom: 12px; color: #f87171; font-size: 13px;"></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px;">
+            <div class="diag-summary-card"><div class="diag-summary-label">Metadata Rows</div><div class="diag-summary-value" id="corr-metadata-rows">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Matched ATE Rows</div><div class="diag-summary-value" id="corr-matched-rows">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Unmatched Metadata</div><div class="diag-summary-value" id="corr-unmatched-metadata">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Unmatched ATE</div><div class="diag-summary-value" id="corr-unmatched-ate">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Validation Status</div><div class="diag-summary-value" id="corr-validation-status" style="color: #60a5fa;">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Correlation Hash</div><div class="diag-summary-value" id="corr-hash" style="font-size: 11px; word-break: break-all;">-</div></div>
+          </div>
+        </div>
+
+        <div class="diag-panel" id="corr-analytics-panel" style="display: none; margin-bottom: 20px;">
+          <div class="diag-panel-title">Correlation Analytics Dashboard</div>
+          <div class="corr-analytics-grid">
+            <div class="diag-panel"><div class="diag-panel-title">PASS / FAIL Distribution</div>
+              <div class="clu-chart-stage" id="corr-passfail-chart-stage"><svg id="corr-passfail-chart" class="clu-chart-svg" viewBox="0 0 320 240"></svg><div class="clu-chart-tooltip" id="corr-passfail-tooltip"></div></div>
+              <div class="clu-chart-empty" id="corr-passfail-empty" style="display:none;">No correlation data available.</div>
+              <div class="clu-chart-legend" id="corr-passfail-legend"></div>
+            </div>
+            <div class="diag-panel"><div class="diag-panel-title">Correlation Health</div>
+              <div class="corr-analytics-health-grid">
+                <div class="diag-summary-card"><div class="diag-summary-label">PASS %</div><div class="diag-summary-value" id="corr-health-pass-rate" style="color:#34d399;">-</div></div>
+                <div class="diag-summary-card"><div class="diag-summary-label">FAIL %</div><div class="diag-summary-value" id="corr-health-fail-rate" style="color:#f87171;">-</div></div>
+                <div class="diag-summary-card"><div class="diag-summary-label">Unknown %</div><div class="diag-summary-value" id="corr-health-unknown-rate">-</div></div>
+                <div class="diag-summary-card"><div class="diag-summary-label">Rows With Issues</div><div class="diag-summary-value" id="corr-health-issues-rate" style="color:#fbbf24;">-</div></div>
+                <div class="diag-summary-card"><div class="diag-summary-label">Clean Rows</div><div class="diag-summary-value" id="corr-health-clean-rate" style="color:#60a5fa;">-</div></div>
+              </div>
+            </div>
+            <div class="diag-panel"><div class="diag-panel-title">Top Failing Scan Chains</div>
+              <div class="clu-chart-stage"><svg id="corr-top-chains-chart" class="clu-chart-svg" viewBox="0 0 320 240"></svg></div>
+              <div class="clu-chart-empty" id="corr-top-chains-empty" style="display:none;">No FAIL events recorded.</div>
+            </div>
+            <div class="diag-panel"><div class="diag-panel-title">Most Frequently Failing Patterns</div>
+              <div class="clu-chart-stage"><svg id="corr-top-patterns-chart" class="clu-chart-svg" viewBox="0 0 320 240"></svg></div>
+              <div class="clu-chart-empty" id="corr-top-patterns-empty" style="display:none;">No FAIL events recorded.</div>
+            </div>
+            <div class="diag-panel"><div class="diag-panel-title">Data Quality Overview</div>
+              <div class="clu-chart-stage"><svg id="corr-data-quality-chart" class="clu-chart-svg" viewBox="0 0 320 280"></svg></div>
+              <div class="clu-chart-empty" id="corr-data-quality-empty" style="display:none;">No correlation data available.</div>
+            </div>
+            <div class="diag-panel"><div class="diag-panel-title">Quick Insights</div><div class="corr-insights-list" id="corr-insights-list"></div></div>
+          </div>
+        </div>
+
+        <div class="diag-panel corr-explorer-toolbar" id="corr-explorer-panel" style="display: none;">
+          <div class="diag-panel-title">Search &amp; Filters</div>
+          <div class="corr-toolbar-grid">
+            <div><label class="red-toolbar-label" for="corr-search-input">Search</label><input type="text" class="filter-input" id="corr-search-input" placeholder="Pattern ID, Scan Chain, Result, or Flag..." oninput="onCorrSearchInput(event)"></div>
+            <div><label class="red-toolbar-label" for="corr-filter-latest-result">Latest Result</label><select class="filter-input" id="corr-filter-latest-result" onchange="onCorrFilterChange()"><option value="All">All</option><option value="PASS">PASS</option><option value="FAIL">FAIL</option><option value="Unknown">Unknown</option></select></div>
+            <div><label class="red-toolbar-label" for="corr-filter-data-quality">Data Quality</label><select class="filter-input" id="corr-filter-data-quality" onchange="onCorrFilterChange()"><option value="All">All</option><option value="NO_FLAGS">NO_FLAGS</option></select></div>
+            <div><label class="red-toolbar-label" for="corr-filter-scan-chain">Scan Chain</label><select class="filter-input" id="corr-filter-scan-chain" onchange="onCorrFilterChange()"><option value="All">All</option></select></div>
+            <div><label class="red-toolbar-label" for="corr-filter-pattern">Pattern</label><select class="filter-input" id="corr-filter-pattern" onchange="onCorrFilterChange()"><option value="All">All</option></select></div>
+          </div>
+        </div>
+
+        <div class="diag-panel" id="corr-outcomes-panel" style="display: none; margin-bottom: 20px;">
+          <div class="diag-panel-title">Correlation Outcomes</div>
+          <div class="table-container corr-outcomes-table-wrapper">
+            <table id="corr-outcomes-table"><thead><tr>
+              <th class="corr-sortable" onclick="onCorrSortHeaderClick('pattern_id')">Pattern ID<span class="corr-sort-indicator" data-corr-sort-indicator="pattern_id"></span></th>
+              <th class="corr-sortable" onclick="onCorrSortHeaderClick('scan_chain_id')">Scan Chain ID<span class="corr-sort-indicator" data-corr-sort-indicator="scan_chain_id"></span></th>
+              <th class="corr-sortable" onclick="onCorrSortHeaderClick('latest_result')">Latest Result<span class="corr-sort-indicator" data-corr-sort-indicator="latest_result"></span></th>
+              <th class="corr-sortable" onclick="onCorrSortHeaderClick('pass_count')">PASS Count<span class="corr-sort-indicator" data-corr-sort-indicator="pass_count"></span></th>
+              <th class="corr-sortable" onclick="onCorrSortHeaderClick('fail_count')">FAIL Count<span class="corr-sort-indicator" data-corr-sort-indicator="fail_count"></span></th>
+              <th class="corr-sortable" onclick="onCorrSortHeaderClick('history_length')">History Length<span class="corr-sort-indicator" data-corr-sort-indicator="history_length"></span></th>
+              <th class="corr-sortable" onclick="onCorrSortHeaderClick('data_quality')">Data Quality<span class="corr-sort-indicator" data-corr-sort-indicator="data_quality"></span></th>
+            </tr></thead><tbody></tbody></table>
+          </div>
+          <div id="corr-outcomes-empty" style="display: none; padding: 16px; color: var(--color-text-muted); font-size: 14px;">No correlation outcomes to display. Run correlation to populate the investigation table.</div>
+          <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding: 8px 16px; background: rgba(255,255,255,0.02); border-radius: 8px;">
+            <div class="pagination-info" id="corr-pagination-info" style="font-size: 14px; color: var(--color-text-muted);">Showing 0 of 0 filtered rows (0 total)</div>
+            <div class="pagination-buttons" style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary" onclick="prevCorrPage()" id="btn-corr-prev" style="padding: 6px 12px; font-size: 13px;">Previous</button>
+              <button class="btn btn-secondary" onclick="nextCorrPage()" id="btn-corr-next" style="padding: 6px 12px; font-size: 13px;">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="corr-detail-drawer" class="red-drawer-backdrop" style="display: none;" onclick="closeCorrDetailDrawerOnBackdrop(event)">
+        <div class="red-drawer-panel" onclick="event.stopPropagation()">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div class="red-drawer-title">Correlation Detail</div>
+            <button class="modal-close-btn" type="button" onclick="closeCorrDetailDrawer()">&times;</button>
+          </div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Pattern ID</div><div class="red-drawer-value" id="corr-drawer-pattern">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Scan Chain ID</div><div class="red-drawer-value" id="corr-drawer-scan-chain">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Latest Result</div><div class="red-drawer-value" id="corr-drawer-latest-result">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">PASS Count</div><div class="red-drawer-value" id="corr-drawer-pass-count">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">FAIL Count</div><div class="red-drawer-value" id="corr-drawer-fail-count">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">History Length</div><div class="red-drawer-value" id="corr-drawer-history-length">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Execution History</div><div class="red-drawer-value" id="corr-drawer-history">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Run IDs</div><div class="red-drawer-value" id="corr-drawer-run-ids">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Validation Status</div><div class="red-drawer-value" id="corr-drawer-validation-status">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Data Quality Flags</div><div class="red-drawer-value" id="corr-drawer-data-quality">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Manifest Version</div><div class="red-drawer-value" id="corr-drawer-manifest-version">-</div></div>
+          <div class="red-drawer-reserved">
+            <div class="diag-panel-title" style="margin-bottom: 12px;">Cross-Phase (Reserved)</div>
+            <div class="red-drawer-field"><div class="red-drawer-label">Similarity Information</div><div class="red-drawer-value">Reserved for PA-FR-008</div></div>
+            <div class="red-drawer-field"><div class="red-drawer-label">Redundancy Information</div><div class="red-drawer-value">Reserved for PA-FR-007</div></div>
+            <div class="red-drawer-field"><div class="red-drawer-label">Pattern Group</div><div class="red-drawer-value">Reserved for PA-FR-010</div></div>
+          </div>
+        </div>
+      </div>

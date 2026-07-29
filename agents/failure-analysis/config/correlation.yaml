@@ -1,0 +1,53 @@
+# FA-FR-006 production failure-to-pattern correlation configuration
+schema_version: "2.0"
+config_version: "correlation-v2.0"
+requirement: "FA-FR-006"
+algorithm: "phi_coefficient"
+batch_size: 10000
+thresholds:
+  minimum_coefficient: 0.15
+  strong: 0.50
+  very_strong: 0.70
+  minimum_confidence: 0.60
+  minimum_support: 0.01
+  significance_level: 0.05
+  minimum_sample_size: 20
+  high_impact: 0.55
+  trend_delta: 0.05
+upstream:
+  require_normalization: true
+  require_pattern_detection: true
+  require_failure_rates: true
+  require_fault_classification: true
+  require_recurrence: true
+cohort:
+  require_same_tenant: true
+  require_product_overlap: true
+  require_test_stage_overlap: true
+  compatible_formula_prefix: "failure-rate-v1"
+# Legacy dimensions remain supported by the compatibility engine.
+dimensions:
+  - tester
+  - product
+  - wafer
+  - die
+  - lot
+  - equipment
+  - machine
+  - operator
+  - temperature
+  - voltage
+  - process_step
+  - shift
+statistical_methods:
+  - pearson
+  - spearman
+  - chi_square
+  - association_rules
+weights:
+  failure_frequency: 0.20
+  normalized_failure_rate: 0.15
+  uniqueness: 0.15
+  co_failure_lift: 0.15
+  spatial_concentration: 0.10
+  cross_lot_persistence: 0.25

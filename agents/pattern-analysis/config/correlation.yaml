@@ -1,0 +1,6 @@
+correlation:
+  join_key: [pattern_id, scan_chain_id]
+  strict_join: true
+  flag_missing_rows: true
+  export_history: true
+  export_manifest: true

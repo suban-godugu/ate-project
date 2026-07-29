@@ -1,0 +1,187 @@
+.dashboard-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width, 280px) 1fr;
+  grid-template-rows: 72px 1fr;
+  grid-template-areas:
+    "sidebar navbar"
+    "sidebar main";
+  height: 100vh;
+  overflow: hidden;
+  background: #090b12;
+}
+
+.dashboard-sidebar {
+  grid-area: sidebar;
+}
+
+.dashboard-navbar {
+  grid-area: navbar;
+}
+
+.dashboard-main {
+  grid-area: main;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 100%;
+}
+
+/* Enterprise KPI grid — mobile-first responsive layout */
+.kpi-grid,
+.kpi-grid-section,
+.pattern-kpi-grid,
+.ai-rec-kpi-grid,
+.test-opt-kpi-grid {
+  display: grid;
+  width: 100%;
+  gap: 24px;
+  grid-template-columns: 1fr;
+  align-items: stretch;
+}
+
+.kpi-grid > *,
+.kpi-grid-section > *,
+.pattern-kpi-grid > *,
+.ai-rec-kpi-grid > *,
+.test-opt-kpi-grid > * {
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 768px) {
+  .kpi-grid,
+  .kpi-grid-section,
+  .pattern-kpi-grid,
+  .ai-rec-kpi-grid,
+  .test-opt-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .kpi-grid,
+  .pattern-kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .kpi-grid-section,
+  .ai-rec-kpi-grid,
+  .test-opt-kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Enterprise KPI typography — single source of truth for all modules */
+.enterprise-kpi-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+.enterprise-kpi-value {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 48px;
+  color: #ffffff;
+}
+
+.enterprise-kpi-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #cbd5e1;
+}
+
+.enterprise-kpi-trend {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.enterprise-kpi-trend--positive {
+  color: #10b981;
+}
+
+.enterprise-kpi-trend--negative {
+  color: #ef4444;
+}
+
+.enterprise-kpi-trend--neutral {
+  color: #64748b;
+}
+
+.enterprise-kpi-badge {
+  font-size: 12px;
+  font-weight: 600;
+  height: 26px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 72px 1fr;
+    grid-template-areas:
+      "navbar"
+      "main";
+  }
+
+  .dashboard-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-main {
+    padding: 16px;
+  }
+
+  .dashboard-content {
+    gap: 16px;
+  }
+}
+
+main.dashboard-main::-webkit-scrollbar {
+  width: 6px;
+}
+
+main.dashboard-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+main.dashboard-main::-webkit-scrollbar-thumb {
+  background: #2d3748;
+  border-radius: 3px;
+}
+
+.settings-split {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 3fr 2fr;
+  align-items: start;
+}
+
+.settings-panel {
+  border-radius: 24px;
+}
+
+@media (max-width: 1280px) {
+  .settings-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .settings-split {
+    gap: 24px;
+  }
+}

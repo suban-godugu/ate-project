@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@500&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-surface-950: #0b0614;
+  --color-surface-900: #120a1f;
+  --color-surface-850: #1a102c;
+  --color-surface-800: #221538;
+  --color-surface-700: #2e1e4a;
+  --color-surface-600: #3d2a5f;
+
+  --color-accent-400: #c4b5fd;
+  --color-accent-500: #a78bfa;
+  --color-accent-600: #8b5cf6;
+  --color-accent-700: #7c3aed;
+
+  --color-ink-100: #f3eefc;
+  --color-ink-200: #d8cee9;
+  --color-ink-300: #a89bc0;
+  --color-ink-400: #7d6f96;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-surface-950 text-ink-100 font-sans antialiased;
+    background-image:
+      radial-gradient(900px 420px at 12% -8%, rgba(139, 92, 246, 0.22), transparent 55%),
+      radial-gradient(700px 360px at 92% 0%, rgba(124, 58, 237, 0.12), transparent 50%),
+      linear-gradient(180deg, #0b0614 0%, #120a1f 100%);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #3d2a5f transparent;
+  }
+}
+
+@layer utilities {
+  .card-surface {
+    @apply rounded-2xl border border-white/8 bg-surface-850/80 backdrop-blur-sm shadow-[0_8px_30px_rgba(0,0,0,0.25)];
+  }
+
+  .card-hover {
+    @apply transition duration-200 hover:border-accent-600/40 hover:shadow-[0_12px_36px_rgba(124,58,237,0.18)];
+  }
+}

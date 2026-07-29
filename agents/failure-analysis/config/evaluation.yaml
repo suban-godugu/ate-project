@@ -1,0 +1,84 @@
+# FA Evaluation, Validation & Model Training Framework
+schema_version: "1.0"
+
+# Search roots are scanned recursively for stil/log/txt/csv/json.
+# Paths may be absolute or relative to the Failure-Analysis-Agent project root.
+# Environment overrides (preferred):
+#   DATASET_ROOT / VERILUMEN_DATA_ROOT / EVALUATION_DATA_ROOTS (semicolon-separated)
+# When unset, discovery also probes ~/Desktop/verilumen labs via Path.home().
+search_roots:
+  - "."
+
+file_extensions:
+  stil: [".stil"]
+  logs: [".log", ".txt"]
+  tabular: [".csv", ".json"]
+
+matching:
+  # Pattern-scale tokens used to pair STIL files with log folders.
+  scale_tokens:
+    - "1000"
+    - "2000"
+    - "full"
+    - "29642"
+    - "29625"
+  prefer_labelled_logs: true
+  labelled_name_patterns: ["fail_die", "good_die"]
+  ignore_name_patterns: ["Example"]
+
+execution:
+  # Limit log parsing for interactive / CI runs. 0 = no limit.
+  max_logs_per_dataset: 30
+  max_stil_bytes_for_full_parse: 50000000
+  run_full_pipeline_by_default: true
+  modules:
+    - FA-FR-001
+    - FA-FR-002
+    - FA-FR-003
+    - FA-FR-004
+    - FA-FR-005
+    - FA-FR-006
+    - FA-FR-007
+    - FA-FR-008
+    - FA-FR-009
+    - FA-FR-010
+
+validation:
+  min_detection_accuracy_pct: 95.0
+  min_classification_confidence: 0.5
+  min_prediction_confidence: 0.3
+  require_export_artifacts: true
+
+benchmark:
+  history_limit: 100
+  sample_interval_ms: 200
+
+training:
+  enabled: true
+  test_size: 0.2
+  validation_size: 0.1
+  random_state: 42
+  min_labelled_samples: 20
+  model_store_dir: "backend/storage/models"
+  labelled_csv_globs:
+    - "**/dashboard_data/*.csv"
+    - "**/ai_enriched_failures.csv"
+    - "**/stil_ai_features.csv"
+
+reporting:
+  output_dir: "backend/storage/evaluation_reports"
+  formats: ["pdf", "excel", "csv", "json"]
+
+performance_targets_ms:
+  upload: 10000
+  parsing: 30000
+  pattern_detection: 10000
+  classification: 10000
+  correlation: 10000
+  root_cause: 5000
+  report_generation: 10000
+  dashboard_refresh: 2000
+
+logging:
+  log_dir: "backend/storage/evaluation_logs"
+  level: INFO

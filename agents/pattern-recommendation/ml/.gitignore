@@ -1,0 +1,6 @@
+# Generated ML datasets and feedback (keep artifacts optionally committed)
+ml/data/
+*.parquet
+__pycache__/
+*.pyc
+.pytest_cache/

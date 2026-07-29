@@ -1,0 +1,24 @@
+name: EOD Push Reminder
+on:
+  schedule:
+    - cron: '15 11 * * 1-5'
+jobs:
+  reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Send Reminder Email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "EOD Reminder - Push your work!"
+          to: akhila@verilumen.ai,keerthan@verilumen.ai,mohith@verilumen.ai,hanisha@verilumen.ai,vishwa@verilumen.ai,ganesh@verilumen.ai,suban@verilumen.ai
+          from: verilumen.noreply@gmail.com
+          body: |
+            Hi Team, this is your 4:45 PM reminder!
+            Please push your work to GitHub now.

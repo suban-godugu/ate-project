@@ -1,0 +1,9 @@
+# FA-FR-003 failure rate analytics configuration
+schema_version: "1.0"
+alert_threshold_pct: 5.0
+tolerance_pct: 0.01
+control_limit_sigma: 3.0
+shift_hours: 8
+production_levels:
+  - manufacturing
+  - test_stage

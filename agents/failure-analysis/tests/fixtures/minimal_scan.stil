@@ -1,0 +1,36 @@
+STIL 1.0;
+Header {
+Title "Minimal Scan Fixture";
+Date "2026-07-15";
+Source "FA_FR_001_TEST";
+}
+History {
+Ann {* Begin_Verify_Section *}
+Ann {* test_set_type = EDT_SCAN_TEST *}
+Ann {* pattern_begin = 1 *}
+Ann {* pattern_end = 3 *}
+Ann {* tcd_signature = test_fixture *}
+Ann {* End_Verify_Section *}
+}
+ScanStructures {
+ScanChain chain_channel0 {
+ScanLength 8;
+ScanIn "SI0";
+ScanOut "SO0";
+ScanMasterClock "CLK";
+}
+ScanChain chain_channel1 {
+ScanLength 8;
+ScanIn "SI1";
+ScanOut "SO1";
+ScanMasterClock "CLK";
+}
+}
+PatternBurst "burst1" {
+Ann {* Pattern:1 *}
+Ann {* Pattern:2 *}
+Ann {* Pattern:3 *}
+Ann {* pattern_numer:1 *}
+Ann {* pattern_numer:2 *}
+Ann {* pattern_numer:3 *}
+}

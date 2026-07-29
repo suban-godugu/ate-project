@@ -1,0 +1,123 @@
+      <!-- SIMILARITY TAB (PHASE 8) -->
+      <div class="tab-content" id="tab-similarity">
+        <div class="diag-panel" style="margin-bottom: 20px;">
+          <div class="diag-panel-title">Pairwise Similarity (Mode 1)</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 16px;">
+            <div class="sim-combobox" id="sim-combobox-a">
+              <label for="sim-pattern-a" style="display: block; font-size: 12px; color: var(--color-text-muted); margin-bottom: 6px;">Pattern A</label>
+              <div class="sim-combobox-anchor">
+                <input type="text" class="filter-input sim-combobox-input" id="sim-pattern-a" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sim-pattern-a-listbox" placeholder="Search Pattern..." autocomplete="off">
+                <ul class="sim-combobox-listbox" id="sim-pattern-a-listbox" role="listbox" aria-label="Pattern A options"></ul>
+              </div>
+            </div>
+            <div class="sim-combobox" id="sim-combobox-b">
+              <label for="sim-pattern-b" style="display: block; font-size: 12px; color: var(--color-text-muted); margin-bottom: 6px;">Pattern B</label>
+              <div class="sim-combobox-anchor">
+                <input type="text" class="filter-input sim-combobox-input" id="sim-pattern-b" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sim-pattern-b-listbox" placeholder="Search Pattern..." autocomplete="off">
+                <ul class="sim-combobox-listbox" id="sim-pattern-b-listbox" role="listbox" aria-label="Pattern B options"></ul>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="runPairwiseSimilarity()">Compare Patterns</button>
+          <div id="sim-pair-error" style="display: none; margin-top: 12px; color: #f87171; font-size: 13px;"></div>
+        </div>
+
+        <div class="diag-panel" id="sim-pair-results-panel" style="display: none; margin-bottom: 20px;">
+          <div class="diag-panel-title">Pairwise Result</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px;">
+            <div class="diag-summary-card"><div class="diag-summary-label">Pattern A</div><div class="diag-summary-value" id="sim-pair-pattern-a">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Pattern B</div><div class="diag-summary-value" id="sim-pair-pattern-b">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Similarity Score</div><div class="diag-summary-value" id="sim-pair-score" style="color: #60a5fa;">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Category</div><div class="diag-summary-value" id="sim-pair-category">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Engine Latency</div><div class="diag-summary-value" id="sim-pair-latency">-</div></div>
+            <div class="diag-summary-card"><div class="diag-summary-label">Embedding Version</div><div class="diag-summary-value" id="sim-pair-embedding-version">-</div></div>
+          </div>
+        </div>
+
+        <div class="diag-panel" style="margin-bottom: 20px;">
+          <div class="diag-panel-title">Top-N Similarity (Mode 2)</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 16px;">
+            <div class="sim-combobox" id="sim-combobox-ref">
+              <label for="sim-reference-pattern" style="display: block; font-size: 12px; color: var(--color-text-muted); margin-bottom: 6px;">Reference Pattern</label>
+              <div class="sim-combobox-anchor">
+                <input type="text" class="filter-input sim-combobox-input" id="sim-reference-pattern" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sim-reference-pattern-listbox" placeholder="Search Pattern..." autocomplete="off">
+                <ul class="sim-combobox-listbox" id="sim-reference-pattern-listbox" role="listbox" aria-label="Reference pattern options"></ul>
+              </div>
+            </div>
+            <div>
+              <label for="sim-top-n" style="display: block; font-size: 12px; color: var(--color-text-muted); margin-bottom: 6px;">Top N</label>
+              <input type="number" class="filter-input" id="sim-top-n" min="1" value="10" style="width: 100%;">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="runTopNSimilarity()">Analyze Top-N</button>
+          <div id="sim-topn-error" style="display: none; margin-top: 12px; color: #f87171; font-size: 13px;"></div>
+        </div>
+
+        <div class="diag-panel sim-explorer-toolbar" id="sim-topn-explorer-panel" style="display: none; margin-bottom: 16px;">
+          <div class="diag-panel-title">Search &amp; Filters</div>
+          <div class="sim-toolbar-grid">
+            <div><label class="red-toolbar-label" for="sim-topn-search-input">Search</label><input type="text" class="filter-input" id="sim-topn-search-input" placeholder="Pattern ID or category..." oninput="onSimTopNSearchInput(event)"></div>
+            <div><label class="red-toolbar-label" for="sim-filter-category">Category</label><select class="filter-input" id="sim-filter-category" onchange="onSimTopNFilterChange()"><option value="All">All</option></select></div>
+            <div><label class="red-toolbar-label" for="sim-filter-range">Similarity Range</label><select class="filter-input" id="sim-filter-range" onchange="onSimTopNFilterChange()"><option value="All">All</option><option value="99–100%">99–100%</option><option value="95–99%">95–99%</option><option value="90–95%">90–95%</option><option value="&lt;90%">&lt;90%</option></select></div>
+            <div><label class="red-toolbar-label" for="sim-filter-cluster">Cluster</label><select class="filter-input" id="sim-filter-cluster" onchange="onSimTopNFilterChange()"><option value="All">All</option></select></div>
+            <div><label class="red-toolbar-label" for="sim-filter-embedding-version">Embedding Version</label><select class="filter-input" id="sim-filter-embedding-version" onchange="onSimTopNFilterChange()"><option value="All">All</option></select></div>
+          </div>
+          <div class="sim-export-toolbar" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+            <button class="btn btn-secondary" onclick="exportSimTopNCurrentView('csv')">Export Current View (CSV)</button>
+            <button class="btn btn-secondary" onclick="exportSimTopNCurrentView('json')">Export Current View (JSON)</button>
+            <button class="btn btn-secondary" onclick="exportSimTopNCurrentView('pdf')">Export Current View (PDF)</button>
+            <button class="btn btn-secondary" onclick="exportSimTopNAll('csv')">Export All (CSV)</button>
+            <button class="btn btn-secondary" onclick="exportSimTopNAll('json')">Export All (JSON)</button>
+            <button class="btn btn-secondary" onclick="exportSimTopNAll('pdf')">Export All (PDF)</button>
+          </div>
+        </div>
+
+        <div class="diag-panel" id="sim-topn-results-panel" style="display: none; margin-bottom: 20px;">
+          <div class="diag-panel-title">Top-N Results</div>
+          <div class="table-container sim-topn-table-wrapper">
+            <table id="sim-topn-table">
+              <thead>
+                <tr>
+                  <th class="sim-sortable" onclick="onSimTopNSortHeaderClick('rank')">Rank<span class="sim-sort-indicator" data-sim-sort-indicator="rank"></span></th>
+                  <th class="sim-sortable" onclick="onSimTopNSortHeaderClick('pattern_id')">Pattern ID<span class="sim-sort-indicator" data-sim-sort-indicator="pattern_id"></span></th>
+                  <th class="sim-sortable" onclick="onSimTopNSortHeaderClick('similarity')">Similarity<span class="sim-sort-indicator" data-sim-sort-indicator="similarity"></span></th>
+                  <th class="sim-sortable" onclick="onSimTopNSortHeaderClick('category')">Category<span class="sim-sort-indicator" data-sim-sort-indicator="category"></span></th>
+                  <th class="sim-sortable" onclick="onSimTopNSortHeaderClick('cluster_id')">Cluster<span class="sim-sort-indicator" data-sim-sort-indicator="cluster_id"></span></th>
+                  <th class="sim-sortable" onclick="onSimTopNSortHeaderClick('embedding_version')">Embedding Version<span class="sim-sort-indicator" data-sim-sort-indicator="embedding_version"></span></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div id="sim-topn-empty" style="display: none; padding: 16px; color: var(--color-text-muted); font-size: 14px;">No Top-N results to display.</div>
+          <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding: 8px 16px; background: rgba(255,255,255,0.02); border-radius: 8px;">
+            <div class="pagination-info" id="sim-topn-pagination-info" style="font-size: 14px; color: var(--color-text-muted);">Showing 0 of 0 filtered rows (0 total)</div>
+            <div class="pagination-buttons" style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary" onclick="prevSimTopNPage()" id="btn-sim-topn-prev" style="padding: 6px 12px; font-size: 13px;">Previous</button>
+              <button class="btn btn-secondary" onclick="nextSimTopNPage()" id="btn-sim-topn-next" style="padding: 6px 12px; font-size: 13px;">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sim-similarity-drawer" class="red-drawer-backdrop" style="display: none;" onclick="closeSimSimilarityDrawerOnBackdrop(event)">
+        <div class="red-drawer-panel" onclick="event.stopPropagation()">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div class="red-drawer-title">Similarity Detail</div>
+            <button class="modal-close-btn" type="button" onclick="closeSimSimilarityDrawer()">&times;</button>
+          </div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Rank</div><div class="red-drawer-value" id="sim-drawer-rank">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Pattern ID</div><div class="red-drawer-value" id="sim-drawer-pattern-id">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Similarity</div><div class="red-drawer-value" id="sim-drawer-similarity">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Category</div><div class="red-drawer-value" id="sim-drawer-category">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Cluster ID</div><div class="red-drawer-value" id="sim-drawer-cluster-id">-</div></div>
+          <div class="red-drawer-field"><div class="red-drawer-label">Embedding Version</div><div class="red-drawer-value" id="sim-drawer-embedding-version">-</div></div>
+          <div class="red-drawer-reserved">
+            <div class="diag-panel-title" style="margin-bottom: 12px;">Test Outcome (Reserved)</div>
+            <div class="red-drawer-field"><div class="red-drawer-label">Latest Test Outcome</div><div class="red-drawer-value">Available once PA-FR-009 is integrated</div></div>
+            <div class="red-drawer-field"><div class="red-drawer-label">PASS Count</div><div class="red-drawer-value">Available once PA-FR-009 is integrated</div></div>
+            <div class="red-drawer-field"><div class="red-drawer-label">FAIL Count</div><div class="red-drawer-value">Available once PA-FR-009 is integrated</div></div>
+            <div class="red-drawer-field"><div class="red-drawer-label">History</div><div class="red-drawer-value">Available once PA-FR-009 is integrated</div></div>
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,7 @@
+clustering:
+  algorithm: Agglomerative
+  linkage: Average
+  similarity_metric: Cosine
+  similarity_threshold: 0.99
+  singleton_clusters: true
+  cluster_version: auto

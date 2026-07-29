@@ -1,0 +1,55 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+**/.env
+!**/.env.example
+!**/.env.local.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+.next/
+dist/
+build/
+out/
+.turbo/
+
+# Runtime / local data (share package keeps dirs empty)
+runtime/minio-data/
+runtime/logs/
+runtime/output/**
+!runtime/output/.gitkeep
+runtime/input/**
+!runtime/input/.gitkeep
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Models / large artifacts
+*.pth
+*.pt
+*.onnx
+*.h5
+*.pkl
+*.joblib
+*.parquet
+
+# Logs / coverage
+*.log
+coverage/
+htmlcov/
+.coverage

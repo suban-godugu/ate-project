@@ -1,0 +1,118 @@
+    /* PA-UI-007 PHASE 7 UI */
+    /* PA-UI-007.3 Redundancy Explorer */
+    .red-explorer-toolbar {
+      margin-bottom: 16px;
+    }
+
+    .red-toolbar-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.4fr) repeat(4, minmax(140px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .red-toolbar-label {
+      display: block;
+      font-size: 12px;
+      color: var(--color-text-muted);
+      margin-bottom: 6px;
+    }
+
+    .red-export-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .red-candidates-table-wrapper {
+      max-height: 460px;
+    }
+
+    .red-candidates-table-wrapper table tbody tr {
+      cursor: pointer;
+    }
+
+    .red-candidates-table-wrapper table tbody tr:hover td {
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    th.red-sortable {
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    th.red-sortable:hover {
+      color: var(--color-text-normal);
+    }
+
+    .red-sort-indicator {
+      margin-left: 4px;
+      font-size: 10px;
+      color: #60a5fa;
+    }
+
+    .red-confidence-cell {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .red-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 1200;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .red-drawer-panel {
+      width: min(420px, 100vw);
+      height: 100%;
+      background: #12151b;
+      border-left: 1px solid var(--card-border);
+      padding: 24px;
+      overflow-y: auto;
+      box-shadow: -8px 0 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .red-drawer-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .red-drawer-field {
+      margin-bottom: 14px;
+    }
+
+    .red-drawer-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--color-text-muted);
+      margin-bottom: 4px;
+    }
+
+    .red-drawer-value {
+      font-size: 14px;
+      color: var(--color-text-normal);
+      font-family: var(--font-mono);
+      word-break: break-word;
+    }
+
+    .red-drawer-reserved {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.12);
+    }
+
+    .red-drawer-reserved .red-drawer-value {
+      color: var(--color-text-muted);
+      font-family: var(--font-primary);
+      font-style: italic;
+    }

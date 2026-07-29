@@ -1,0 +1,27 @@
+# Dataset-robustness rules — keep output artifact contracts stable.
+robustness:
+  # How to derive source_lot when not present on execution rows.
+  # parent_dir: LOT_A/foo.log -> LOT_A (default)
+  # basename: use filename stem only
+  lot_mapping:
+    strategy: parent_dir
+    ungrouped_label: Ungrouped
+    # Optional explicit overrides: "relative/log/path": "LOT_ID"
+    explicit_map: {}
+
+  # Map ATE result strings to canonical PASS/FAIL (case-insensitive).
+  result_mapping:
+    pass_values: [PASS, P, OK, GOOD]
+    fail_values: [FAIL, F, NG, BAD, ERROR]
+    unknown_label: UNKNOWN
+
+  # Fixed 128-dim embedding contract with geometry adaptation.
+  embedding:
+    target_dimension: 128
+    max_chain_slots: 23
+    window_count: 64
+    overflow_chain_strategy: aggregate  # aggregate extras into cross-chain stats
+
+  # STIL structural validation for WaveformTable / W references.
+  stil_validation:
+    waveform_table_mode: auto  # auto | strict | warn

@@ -1,0 +1,14 @@
+# Pattern manifest for FA-FR-002 inference fallback.
+# Maps failing test numbers/names → ATPG pattern IDs (from Pattern Analysis Agent).
+schema_version: "1.0"
+test_to_pattern:
+  IDDQ: "000550"
+  SCAN_CHAIN_3: "000279"
+  MEMORY_BIST: "002001"
+  "101": "000101"
+  "1001": "001001"
+  P1001: "001001"
+  P1002: "001002"
+  P2001: "002001"
+  P2002: "002002"
+pattern_ids: ["000279", "000550", "001001", "001002", "002001", "002002"]

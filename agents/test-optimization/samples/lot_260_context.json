@@ -1,0 +1,49 @@
+{
+  "device": "SOC_XYZ",
+  "lot_id": "LOT_260",
+  "fab": "FAB-A",
+  "pattern_recommendation": {
+    "patterns_removed": ["PAT_055"],
+    "patterns_added": [],
+    "patterns_reordered": ["PAT_001", "PAT_010"],
+    "coverage_after_optimization": 98.85,
+    "estimated_test_time_saved": 3.2
+  },
+  "yield_data": {
+    "current_yield": 97.9,
+    "historical_yield": 97.5,
+    "yield_trend": "stable",
+    "yield_loss": -0.4,
+    "defect_density": 0.15,
+    "fail_bins": { "BIN_SCAN": 5 }
+  },
+  "ate_logs": {
+    "execution_time_s": 40.0,
+    "tester_utilization": 0.86,
+    "retest_count": 12,
+    "abort_rate": 0.004,
+    "site_count": 4,
+    "site_utilization": { "1": 0.9, "2": 0.85, "3": 0.84, "4": 0.88 },
+    "total_devices": 1000
+  },
+  "coverage_report": {
+    "stuck_at": 99.1,
+    "transition": 98.9,
+    "path_delay": 98.8,
+    "cell_aware": 98.6,
+    "coverage_pct": 98.85,
+    "target_coverage_pct": 98.8
+  },
+  "production_history": {
+    "device": "SOC_XYZ",
+    "historical_failures": [],
+    "high_failure_lots": [],
+    "escape_rate_ppm": 40
+  },
+  "cost_metrics": {
+    "cost_per_second_usd": 0.05,
+    "cost_per_die_usd": 0.41,
+    "target_cost_per_die_usd": 0.4,
+    "tester_hour_cost_usd": 180
+  }
+}

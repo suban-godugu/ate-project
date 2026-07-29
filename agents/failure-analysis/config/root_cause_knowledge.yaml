@@ -1,0 +1,59 @@
+# FA-FR-009 engineering knowledge base for semantic historical retrieval
+schema_version: "1.0"
+historical_cases:
+  - case_id: KB-001
+    fault_type: TIMING_VIOLATION
+    root_cause: Clock tree skew on scan chain CH1
+    keywords: [SETUP_TIMING, HOLD_FAILURE, negative slack, scan chain]
+    investigation: Re-run STA on affected scan chain and verify clock insertion delay.
+    resolution: Adjust clock buffer sizing on lot re-spin.
+    confidence_prior: 0.82
+  - case_id: KB-002
+    fault_type: POWER_IR_DROP_FAULT
+    root_cause: IR drop on power mesh near die edge
+    keywords: [IR_DROP, VDD, power grid, edge failure]
+    investigation: Generate IR drop map and correlate with failing die coordinates.
+    resolution: Widen power strap on metal layer M5.
+    confidence_prior: 0.78
+  - case_id: KB-003
+    fault_type: LEAKAGE_IDDQ
+    root_cause: Gate oxide defect causing elevated IDDQ
+    keywords: [IDDQ, leakage, hard_bin 5, current limit]
+    investigation: Pull FA sample and run photoemission on failing dies.
+    resolution: Process chamber clean and retest on next lot.
+    confidence_prior: 0.75
+  - case_id: KB-004
+    fault_type: SCAN_SHIFT_MISMATCH
+    root_cause: Scan chain stuck-at on shift register
+    keywords: [SCAN_SHIFT, scan chain, stuck-at, functional]
+    investigation: Run scan diagnostics and compare expected vs actual signature.
+    resolution: Replace suspect flip-flop macro in next metal fix.
+    confidence_prior: 0.80
+  - case_id: KB-005
+    fault_type: THERMAL_HOTSPOT
+    root_cause: Localized thermal stress during burn-in
+    keywords: [THERMAL, hotspot, parametric, temperature]
+    investigation: Review thermal profile and correlate with FAILURE_REGION hotspot.
+    resolution: Adjust burn-in temperature ramp rate.
+    confidence_prior: 0.70
+  - case_id: KB-006
+    fault_type: MEMORY_BIST_FAIL
+    root_cause: Bit-cell instability in SRAM array
+    keywords: [MEMORY, BIST, memory failure, hard_bin 7]
+    investigation: Run memory BIST bitmap analysis and repair fuse check.
+    resolution: Adjust SRAM Vmin characterization limits.
+    confidence_prior: 0.76
+  - case_id: KB-007
+    fault_type: OPEN_NET
+    root_cause: Open interconnect on metal layer
+    keywords: [OPEN, open circuit, net open, continuity]
+    investigation: Perform fault isolation and FIB cross-section on suspect net.
+    resolution: Via chain repair on affected metal layer.
+    confidence_prior: 0.74
+  - case_id: KB-008
+    fault_type: SHORT_BRIDGE
+    root_cause: Metal short between adjacent routes
+    keywords: [SHORT, bridge, short circuit, leakage path]
+    investigation: Run short isolation and optical inspection on failing region.
+    resolution: Design rule check on spacing violation and mask review.
+    confidence_prior: 0.73

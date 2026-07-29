@@ -1,0 +1,101 @@
+# FA-FR-004 full taxonomy (reviewer-resolved spec)
+schema_version: "1.0"
+unclassified_label: Unclassified
+categories:
+  - Electrical
+  - Functional
+  - Scan Chain
+  - Memory
+  - Timing
+  - Open Circuit
+  - Short Circuit
+  - Leakage
+  - Power/Ground
+  - Process-Induced
+  - Mechanical Defect
+  - Particle Contamination
+  - Probe Contact
+  - Tester-Induced
+  - Packaging
+category_definitions:
+  Electrical: General electrical defect not covered by a more specific category.
+  Functional: Logic/transition/functional test failure without scan-chain-specific signal.
+  Scan Chain: Scan chain shift/stuck-at mismatch or SCAN_SHIFT fail type.
+  Memory: Memory BIST or memory-related bin/test mapping.
+  Timing: Negative setup/hold slack or setup/hold timing hints.
+  Open Circuit: Open net or floating signal signature.
+  Short Circuit: Short or bridge defect signature.
+  Leakage: IDDQ high or leakage bin mapping.
+  Power/Ground: IR drop, power grid, or supply-related failure.
+  Process-Induced: Process variation or thermal hotspot signature.
+  Mechanical Defect: Physical mechanical damage indicators.
+  Particle Contamination: Particle or contamination spatial signature.
+  Probe Contact: Probe card / contact-related failure pattern.
+  Tester-Induced: Tester equipment or program induced anomaly.
+  Packaging: Package-level or assembly defect.
+thresholds:
+  ir_drop_mv: 50
+  thermal_c: 80
+  timing_slack_ps: 0
+rules:
+  - name: customer_bin_leakage
+    when: {field: hard_bin, in: ["5", "12"]}
+    category: Leakage
+  - name: customer_bin_memory
+    when: {field: hard_bin, in: ["7", "15"]}
+    category: Memory
+  - name: ir_drop_hint
+    when: {field: ROOT_CAUSE_HINT, contains: IR_DROP}
+    category: Power/Ground
+  - name: setup_hold_hint
+    when: {field: ROOT_CAUSE_HINT, contains: SETUP_TIMING}
+    category: Timing
+  - name: hold_hint
+    when: {field: ROOT_CAUSE_HINT, contains: HOLD_FAILURE}
+    category: Timing
+  - name: thermal_hint
+    when: {field: ROOT_CAUSE_HINT, contains: THERMAL}
+    category: Process-Induced
+  - name: hotspot_region
+    when: {field: FAILURE_REGION, contains: HOTSPOT}
+    category: Process-Induced
+  - name: fail_type_str
+    when: {field: FAIL_TYPE, equals: STR}
+    category: Functional
+  - name: fail_type_scan_shift
+    when: {field: FAIL_TYPE, equals: SCAN_SHIFT}
+    category: Scan Chain
+  - name: failing_test_iddq
+    when: {field: failing_test, contains: IDDQ}
+    category: Leakage
+  - name: failing_test_memory
+    when: {field: failing_test, contains: MEMORY}
+    category: Memory
+  - name: failing_test_scan
+    when: {field: failing_test, contains: SCAN}
+    category: Scan Chain
+  - name: negative_setup_slack
+    when: {field: SETUP_SLACK_PS, lt: 0}
+    category: Timing
+  - name: negative_hold_slack
+    when: {field: HOLD_SLACK_PS, lt: 0}
+    category: Timing
+  - name: ir_drop_threshold
+    when: {field: IR_DROP_MV, gte: 50}
+    category: Power/Ground
+  - name: thermal_threshold
+    when: {field: THERMAL_C, gte: 80}
+    category: Process-Induced
+  - name: transition_faults
+    when: {field: TRANSITION_FAULTS, gt: 0}
+    category: Functional
+  - name: scan_fail_default
+    when: {field: STATUS, equals: FAIL}
+    category: Scan Chain
+legacy_category_map:
+  TRANSITION_FAULT: Functional
+  SCAN_SHIFT_FAULT: Scan Chain
+  TIMING_VIOLATION: Timing
+  POWER_IR_DROP_FAULT: Power/Ground
+  THERMAL_HOTSPOT_FAULT: Process-Induced
+  UNKNOWN: Unclassified
