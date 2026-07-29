@@ -1,4 +1,4 @@
-# VERILUMEN — How Everything Connects
+﻿# VERILUMEN ΓÇö How Everything Connects
 
 One place that explains how the **dashboard (frontend)**, **platform backend**, **database / cache / storage**, and **AI agents** work together, what each piece is built with, and how to run the stack.
 
@@ -8,31 +8,31 @@ One place that explains how the **dashboard (frontend)**, **platform backend**, 
 
 ```text
  Browser (:3000 only for users)
-        │
-        ▼
- ┌──────────────────────────────────────────────────────────────┐
- │  Next.js Dashboard  (dashboard/)                             │
- │  • Main ATE Intelligence UI                                  │
- │  • Proxies agent UIs under /embed/*                          │
- │  • Calls platform API at /api/v1 (live mode)                 │
- └───────────────┬──────────────────────────────┬───────────────┘
-                 │ HTTP + JWT + SSE             │ iframe / rewrite
-                 ▼                              ▼
- ┌───────────────────────────┐     ┌────────────────────────────┐
- │  FastAPI Platform API     │     │  Agent services + UIs      │
- │  backend/  (:8000)        │     │  agents/*                  │
- │  + ARQ worker (Redis)     │     │  Pattern / Failure / Scan  │
- └───────────┬───────────────┘     │  Diagnosis / Recs / Opt    │
-             │                     └────────────────────────────┘
-   ┌─────────┼─────────┐
-   ▼         ▼         ▼
+        Γöé
+        Γû╝
+ ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+ Γöé  Next.js Dashboard  (dashboard/)                             Γöé
+ Γöé  ΓÇó Main ATE Intelligence UI                                  Γöé
+ Γöé  ΓÇó Proxies agent UIs under /embed/*                          Γöé
+ Γöé  ΓÇó Calls platform API at /api/v1 (live mode)                 Γöé
+ ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+                 Γöé HTTP + JWT + SSE             Γöé iframe / rewrite
+                 Γû╝                              Γû╝
+ ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ     ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+ Γöé  FastAPI Platform API     Γöé     Γöé  Agent services + UIs      Γöé
+ Γöé  backend/  (:8000)        Γöé     Γöé  agents/*                  Γöé
+ Γöé  + ARQ worker (Redis)     Γöé     Γöé  Pattern / Failure / Scan  Γöé
+ ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ     Γöé  Diagnosis / Recs / Opt    Γöé
+             Γöé                     ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+   ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+   Γû╝         Γû╝         Γû╝
  Postgres  Redis     MinIO
  :5432     :6379     :9000
  (data)    (jobs/    (files)
            cache)
 ```
 
-**User rule:** open **http://localhost:3000/dashboard** — do not browse raw agent ports. The dashboard rewrites `/embed/...` to each agent UI/API.
+**User rule:** open **http://localhost:3000/dashboard** ΓÇö do not browse raw agent ports. The dashboard rewrites `/embed/...` to each agent UI/API.
 
 ---
 
@@ -49,25 +49,25 @@ One place that explains how the **dashboard (frontend)**, **platform backend**, 
 | `agents/scan-debug-recommendation/` | Scan Debug Recommendation | `:8042` / `:3042` |
 | `agents/test-optimization/` | Test Optimization | `:8043` / `:3043` |
 | `agents/spatial-ai/` | WaferVision / spatial AI (optional) | own ports |
-| `runtime/` | Local input / output / MinIO data / logs | — |
+| `runtime/` | Local input / output / MinIO data / logs | ΓÇö |
 
 ---
 
 ## How the layers connect
 
-### 1. Frontend → Platform backend
+### 1. Frontend ΓåÆ Platform backend
 
 | Mode | Behavior |
 |------|----------|
-| `NEXT_PUBLIC_API_MODE=mock` | UI uses local mock data in `dashboard/src/lib/*` — no backend needed |
-| `NEXT_PUBLIC_API_MODE=live` | React Query calls `NEXT_PUBLIC_API_URL` → `http://localhost:8000/api/v1` |
+| `NEXT_PUBLIC_API_MODE=mock` | UI uses local mock data in `dashboard/src/lib/*` ΓÇö no backend needed |
+| `NEXT_PUBLIC_API_MODE=live` | React Query calls `NEXT_PUBLIC_API_URL` ΓåÆ `http://localhost:8000/api/v1` |
 
 Flow in live mode:
 
-1. Login → JWT from FastAPI  
-2. Dashboards / search / notifications → REST  
-3. Uploads → presigned URL → **MinIO** PUT → job status over **SSE** (Redis-backed)  
-4. Primary AI actions → ARQ worker jobs  
+1. Login ΓåÆ JWT from FastAPI  
+2. Dashboards / search / notifications ΓåÆ REST  
+3. Uploads ΓåÆ presigned URL ΓåÆ **MinIO** PUT ΓåÆ job status over **SSE** (Redis-backed)  
+4. Primary AI actions ΓåÆ ARQ worker jobs  
 
 Config: `dashboard/.env.local`
 
@@ -76,17 +76,17 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 NEXT_PUBLIC_API_MODE=live
 ```
 
-### 2. Platform backend → DB / Redis / MinIO
+### 2. Platform backend ΓåÆ DB / Redis / MinIO
 
 | Store | Port | Used for |
 |-------|------|----------|
 | **PostgreSQL** | `5432` | Users, uploads metadata, analytics tables, audit |
 | **Redis** | `6379` | Sessions, cache, ARQ job queue, SSE job status |
-| **MinIO** | `9000` (console `9001`) | STDF/logs/images/PDFs — Postgres keeps only object keys |
+| **MinIO** | `9000` (console `9001`) | STDF/logs/images/PDFs ΓÇö Postgres keeps only object keys |
 
 Backend env: `backend/.env` (from `.env.example`).
 
-### 3. Platform backend → Agents
+### 3. Platform backend ΓåÆ Agents
 
 Backend can call agents over HTTP using service key + base URLs (see `backend/.env.example`):
 
@@ -94,11 +94,11 @@ Backend can call agents over HTTP using service key + base URLs (see `backend/.e
 - `FAILURE_AGENT_API_URL` / dashboard URL  
 - `SCAN_DIAGNOSIS_AGENT_API_URL` / dashboard URL  
 - `VERILUMEN_SERVICE_KEY`  
-- Shared folders: `UPLOAD_INPUT_ROOT`, `AGENT_OUTPUT_ROOT` → under `runtime/` in this package  
+- Shared folders: `UPLOAD_INPUT_ROOT`, `AGENT_OUTPUT_ROOT` ΓåÆ under `runtime/` in this package  
 
 Agents read inputs from `runtime/input/` and write results under `runtime/output/`.
 
-### 4. Frontend → Agents (embeds)
+### 4. Frontend ΓåÆ Agents (embeds)
 
 `dashboard/next.config.ts` rewrites same-origin paths so the browser stays on `:3000`:
 
@@ -185,46 +185,46 @@ Start Postgres as a Windows service (or local install). Redis/MinIO are started 
 
 ---
 
-## Agents — what they do and what they use
+## Agents ΓÇö what they do and what they use
 
-Each agent is its own FastAPI (and often its own UI). Together they cover analysis → diagnosis → recommendation → optimization.
+Each agent is its own FastAPI (and often its own UI). Together they cover analysis ΓåÆ diagnosis ΓåÆ recommendation ΓåÆ optimization.
 
 ```text
  ATE logs / STIL / wafer images
-        │
-        ├─► Pattern Analysis          (patterns, coverage, redundancy)
-        ├─► Failure Analysis          (failures, rates, fault prediction)
-        ├─► Scan Diagnosis            (chain breaks, cell localization, ML)
-        ├─► Pattern Recommendation    (remove / reorder patterns — LightGBM)
-        ├─► Scan Debug Recommendation (debug ranking — sklearn + DQN)
-        ├─► Test Optimization         (adaptive strategy — heuristics + LLM)
-        └─► Spatial AI / WaferVision  (ResNet50 + Grad-CAM) [optional]
+        Γöé
+        Γö£ΓöÇΓû║ Pattern Analysis          (patterns, coverage, redundancy)
+        Γö£ΓöÇΓû║ Failure Analysis          (failures, rates, fault prediction)
+        Γö£ΓöÇΓû║ Scan Diagnosis            (chain breaks, cell localization, ML)
+        Γö£ΓöÇΓû║ Pattern Recommendation    (remove / reorder patterns ΓÇö LightGBM)
+        Γö£ΓöÇΓû║ Scan Debug Recommendation (debug ranking ΓÇö sklearn + DQN)
+        Γö£ΓöÇΓû║ Test Optimization         (adaptive strategy ΓÇö heuristics + LLM)
+        ΓööΓöÇΓû║ Spatial AI / WaferVision  (ResNet50 + Grad-CAM) [optional]
 ```
 
-### Pattern Analysis (`agents/pattern-analysis/`) — `:8011`
+### Pattern Analysis (`agents/pattern-analysis/`) ΓÇö `:8011`
 
 - **Role:** Pattern KPIs, clustering, similarity, optimization scoring for scan patterns  
 - **Stack:** Python, **FastAPI/Uvicorn**, pandas/numpy style analytics, optional GPU/report extras  
 - **UI:** Served from the same agent process; embedded at `/embed/pattern`
 
-### Failure Analysis (`agents/failure-analysis/`) — API `:8021`, UI `:3020`
+### Failure Analysis (`agents/failure-analysis/`) ΓÇö API `:8021`, UI `:3020`
 
-- **Role:** Ingest STIL/logs → patterns → rates → classification → die/wafer → fault prediction → reports (FA-FR-001…010)  
+- **Role:** Ingest STIL/logs ΓåÆ patterns ΓåÆ rates ΓåÆ classification ΓåÆ die/wafer ΓåÆ fault prediction ΓåÆ reports (FA-FR-001ΓÇª010)  
 - **Stack:**
   - **FastAPI**, SQLAlchemy/asyncpg, Alembic, Redis, Celery (optional)
   - **pandas / numpy / scipy / scikit-learn / XGBoost / LightGBM / NetworkX**
   - Optional AI: **OpenAI**, **LangChain**, **FAISS**, **sentence-transformers**
 - **UI:** Next.js (`ate-dashboard`) embedded at `/embed/failure`
 
-### Scan Diagnosis (`agents/scan-diagnosis/`) — API `:8031`, UI `:3030`
+### Scan Diagnosis (`agents/scan-diagnosis/`) ΓÇö API `:8031`, UI `:3030`
 
-- **Role:** Parse ATE logs + STIL → localize scan cells → break detection → root-cause ML  
+- **Role:** Parse ATE logs + STIL ΓåÆ localize scan cells ΓåÆ break detection ΓåÆ root-cause ML  
 - **Stack:**
   - **FastAPI**, pandas, numpy, **scikit-learn** (KNN / K-Means), Parquet cache (**pyarrow**)
   - Multiprocess ingestion (`ProcessPoolExecutor`)
 - **UI:** Next.js embedded at `/embed/scan`
 
-### Pattern Recommendation (`agents/pattern-recommendation/`) — API `:8041`, UI `:3041`
+### Pattern Recommendation (`agents/pattern-recommendation/`) ΓÇö API `:8041`, UI `:3041`
 
 - **Role:** Redundant pattern detection, removal/ordering recommendations, coverage proxies  
 - **Stack:**
@@ -233,7 +233,7 @@ Each agent is its own FastAPI (and often its own UI). Together they cover analys
 - **UI:** **React + Vite + TypeScript + Tailwind + Zustand + Recharts**  
 - Embedded at `/embed/pattern-rec` (API via `/embed/pattern-rec/api-proxy`)
 
-### Scan Debug Recommendation (`agents/scan-debug-recommendation/`) — API `:8042`, UI `:3042`
+### Scan Debug Recommendation (`agents/scan-debug-recommendation/`) ΓÇö API `:8042`, UI `:3042`
 
 - **Role:** KPI engines + ranked debug recommendations; optional RL self-learning  
 - **Stack:**
@@ -241,15 +241,15 @@ Each agent is its own FastAPI (and often its own UI). Together they cover analys
   - **PyTorch** + **Gymnasium** (DQN agent)  
 - **UI:** Next.js embedded at `/embed/scan-debug-rec`
 
-### Test Optimization (`agents/test-optimization/`) — API `:8043`, UI `:3043`
+### Test Optimization (`agents/test-optimization/`) ΓÇö API `:8043`, UI `:3043`
 
-- **Role:** Final decision layer — consumes upstream recs + telemetry → Adaptive Test Strategy JSON  
+- **Role:** Final decision layer ΓÇö consumes upstream recs + telemetry ΓåÆ Adaptive Test Strategy JSON  
 - **Stack:**
   - **FastAPI**, Pydantic  
   - **LangChain** + OpenAI-compatible LLM (with deterministic heuristic fallback)  
 - **UI:** Vite/React embedded at `/embed/test-opt`
 
-### Spatial AI / WaferVision (`agents/spatial-ai/`) — optional
+### Spatial AI / WaferVision (`agents/spatial-ai/`) ΓÇö optional
 
 - **Role:** Wafer defect classification, Grad-CAM explainability, die yield, clusters, zones  
 - **Stack:**
@@ -266,7 +266,7 @@ Each agent is its own FastAPI (and often its own UI). Together they cover analys
 2. Node.js **20+** + npm  
 3. PostgreSQL on `127.0.0.1:5432`  
 4. `redis-server` and `minio` on PATH  
-5. Copy `.env.example` → `.env` / `.env.local` and set DB passwords / JWT / MinIO secrets  
+5. Copy `.env.example` ΓåÆ `.env` / `.env.local` and set DB passwords / JWT / MinIO secrets  
 
 ### First-time setup
 
@@ -295,7 +295,7 @@ cd ..
 # pattern-recommendation\frontend
 # scan-debug-recommendation\frontend
 # test-optimization\frontend
-# → npm install in each
+# ΓåÆ npm install in each
 
 # Agent Python deps
 # pip install -r requirements.txt in each agents\* (venv recommended)
@@ -355,26 +355,26 @@ powershell -ExecutionPolicy Bypass -File .\stop-agents.ps1
 **Live dashboard KPI (platform):**
 
 ```text
-Browser → :3000 → Next.js → http://localhost:8000/api/v1/... → Postgres / Redis
+Browser ΓåÆ :3000 ΓåÆ Next.js ΓåÆ http://localhost:8000/api/v1/... ΓåÆ Postgres / Redis
 ```
 
 **Upload file:**
 
 ```text
-Browser → FastAPI (presign) → MinIO PUT → ARQ worker (parse) → Postgres rows + Redis status → SSE back to UI
+Browser ΓåÆ FastAPI (presign) ΓåÆ MinIO PUT ΓåÆ ARQ worker (parse) ΓåÆ Postgres rows + Redis status ΓåÆ SSE back to UI
 ```
 
-**Scan Chain → Failure Analysis tab (embed):**
+**Scan Chain ΓåÆ Failure Analysis tab (embed):**
 
 ```text
-Browser → :3000/embed/failure/... → Next rewrite → Failure UI :3020 → Failure API :8021
+Browser ΓåÆ :3000/embed/failure/... ΓåÆ Next rewrite ΓåÆ Failure UI :3020 ΓåÆ Failure API :8021
 ```
 
-**Recommendation → Pattern Rec (embed + API proxy):**
+**Recommendation ΓåÆ Pattern Rec (embed + API proxy):**
 
 ```text
-Browser → :3000/embed/pattern-rec/ → UI :3041
-Browser → :3000/embed/pattern-rec/api-proxy/... → API :8041 (LightGBM services)
+Browser ΓåÆ :3000/embed/pattern-rec/ ΓåÆ UI :3041
+Browser ΓåÆ :3000/embed/pattern-rec/api-proxy/... ΓåÆ API :8041 (LightGBM services)
 ```
 
 ---
@@ -388,7 +388,7 @@ Browser → :3000/embed/pattern-rec/api-proxy/... → API :8041 (LightGBM servic
 | `runtime/minio-data/` | Local MinIO bucket storage |
 | `runtime/logs/` | Agent/stack logs |
 
-Large sample datasets are not shipped in the share zip — add files under `runtime/input/` after unzip.
+Large sample datasets are not shipped in the share zip ΓÇö add files under `runtime/input/` after unzip.
 
 ---
 
