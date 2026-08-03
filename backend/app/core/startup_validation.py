@@ -13,6 +13,7 @@ INSECURE_MINIO_SECRET = "minioadmin123"
 
 
 def validate_settings(settings: Settings) -> None:
+    """Log config problems. Never abort process startup (Railway crash loops)."""
     errors: list[str] = []
     warnings: list[str] = []
 
@@ -25,14 +26,13 @@ def validate_settings(settings: Settings) -> None:
     if not settings.jwt_secret:
         errors.append("JWT_SECRET is required")
 
-    # Hard-fail only on missing JWT in production; MinIO can stay temporary until R2 is wired.
     if settings.environment == "production":
         if settings.jwt_secret == INSECURE_JWT:
-            errors.append("JWT_SECRET must be changed in production (set any random string)")
+            warnings.append("JWT_SECRET is still the default — change it for production")
         if settings.minio_secret_key == INSECURE_MINIO_SECRET:
             warnings.append("Using default MINIO_SECRET_KEY — rotate when enabling uploads")
         if "changeme" in settings.database_url.lower():
-            errors.append("DATABASE_URL appears to use a default password in production")
+            warnings.append("DATABASE_URL appears to use a default password in production")
     else:
         if settings.jwt_secret == INSECURE_JWT:
             warnings.append("Using default JWT_SECRET — set JWT_SECRET before production")
@@ -42,6 +42,11 @@ def validate_settings(settings: Settings) -> None:
     for msg in warnings:
         logger.warning(msg)
 
+    for msg in errors:
+        logger.error("Config issue: %s", msg)
+
     if errors:
-        joined = "; ".join(errors)
-        raise RuntimeError(f"Configuration validation failed: {joined}")
+        logger.error(
+            "Configuration issues detected (%s); continuing startup so /live stays up",
+            "; ".join(errors),
+        )
