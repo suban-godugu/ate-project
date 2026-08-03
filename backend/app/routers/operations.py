@@ -5,8 +5,7 @@ from __future__ import annotations
 import json
 
 from fastapi import APIRouter, Response
-from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
-
+from app.core.metrics import CONTENT_TYPE_LATEST, generate_latest
 from app.schemas.common import IntegrationHealthOut
 from app.services.health_service import (
     check_failure_agent_dashboard,

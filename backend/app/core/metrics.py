@@ -1,8 +1,53 @@
-"""Prometheus metrics for VERILUMEN API and workers."""
+"""Prometheus metrics for VERILUMEN API and workers.
+
+If prometheus_client is not installed, metrics become no-ops so the API can still boot.
+"""
 
 from __future__ import annotations
 
-from prometheus_client import Counter, Gauge, Histogram
+try:
+    from prometheus_client import CONTENT_TYPE_LATEST, Counter, Gauge, Histogram, generate_latest
+
+    PROMETHEUS_AVAILABLE = True
+except ModuleNotFoundError:  # pragma: no cover - Railway/minimal images
+    PROMETHEUS_AVAILABLE = False
+    CONTENT_TYPE_LATEST = "text/plain; version=0.0.4; charset=utf-8"
+
+    class _NoopMetric:
+        def labels(self, *args, **kwargs):  # noqa: ANN002, ANN003
+            return self
+
+        def inc(self, *args, **kwargs):  # noqa: ANN002, ANN003
+            return None
+
+        def observe(self, *args, **kwargs):  # noqa: ANN002, ANN003
+            return None
+
+        def set(self, *args, **kwargs):  # noqa: ANN002, ANN003
+            return None
+
+        def time(self):
+            class _Timer:
+                def __enter__(self):
+                    return self
+
+                def __exit__(self, *args):  # noqa: ANN002
+                    return False
+
+            return _Timer()
+
+    def Counter(*args, **kwargs):  # noqa: ANN002, ANN003, N802
+        return _NoopMetric()
+
+    def Gauge(*args, **kwargs):  # noqa: ANN002, ANN003, N802
+        return _NoopMetric()
+
+    def Histogram(*args, **kwargs):  # noqa: ANN002, ANN003, N802
+        return _NoopMetric()
+
+    def generate_latest(*args, **kwargs):  # noqa: ANN002, ANN003
+        return b"# prometheus_client not installed\n"
+
 
 HTTP_REQUESTS = Counter(
     "verilumen_http_requests_total",
