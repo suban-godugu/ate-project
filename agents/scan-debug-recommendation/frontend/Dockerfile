@@ -19,7 +19,4 @@ COPY --from=builder /app/public ./public
 
 EXPOSE 3001
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:3001/ || exit 1
-
-CMD ["npm", "run", "start"]
+CMD sh -c "npm run start -- -H 0.0.0.0 -p ${PORT:-3001}"
