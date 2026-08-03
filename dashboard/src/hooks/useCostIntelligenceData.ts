@@ -188,7 +188,7 @@ export function useFilteredCostIntelligenceData() {
   return useModuleDashboard(
     "cost-intelligence",
     mockBuilder,
-    [...CHART_KEYS],
+    [...CHART_KEYS] as unknown as (keyof ReturnType<typeof buildFilteredCostIntelligenceData>)[],
     applyCostLive,
     getCostIntelligence
   );

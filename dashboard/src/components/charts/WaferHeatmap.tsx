@@ -125,7 +125,7 @@ export function WaferHeatmap() {
     }
 
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !heatData) return;
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
@@ -133,21 +133,22 @@ export function WaferHeatmap() {
     const cy = (e.clientY - rect.top) * scaleY;
     const col = Math.floor((cx - pan.x) / zoom / CELL);
     const row = Math.floor((cy - pan.y) / zoom / CELL);
+    const cellValue = heatData[row]?.[col];
 
     if (
       row >= 0 &&
       row < GRID_SIZE &&
       col >= 0 &&
       col < GRID_SIZE &&
-      heatData[row]?.[col] !== undefined &&
-      heatData[row]![col] >= 0
+      cellValue !== undefined &&
+      cellValue >= 0
     ) {
       setTooltip({
         x: e.clientX,
         y: e.clientY,
         row,
         col,
-        value: heatData[row]![col],
+        value: cellValue,
       });
     } else {
       setTooltip(null);

@@ -155,7 +155,7 @@ export function useFilteredScanChainData() {
   return useModuleDashboard(
     "scan-chain",
     mockBuilder,
-    [...ALL_CHART_KEYS],
+    [...ALL_CHART_KEYS] as unknown as (keyof ReturnType<typeof buildFilteredScanChainData>)[],
     applyScanChainLive,
     (tab, filters) => getModuleTab("scan-chain", tab, filters)
   );
