@@ -63,6 +63,13 @@ class Settings(BaseSettings):
     jwt_access_ttl_min: int = 15
     jwt_refresh_ttl_days: int = 7
 
+    @field_validator("jwt_secret", mode="before")
+    @classmethod
+    def _jwt_secret_not_blank(cls, value: object) -> object:
+        if value is None or (isinstance(value, str) and not value.strip()):
+            return "change-me-in-production"
+        return value
+
     api_prefix: str = "/api/v1"
     cors_origins: list[str] = ["http://localhost:3000"]
     pattern_agent_base_url: str = "http://127.0.0.1:8011"

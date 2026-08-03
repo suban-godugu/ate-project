@@ -15,9 +15,8 @@ RUN chmod +x /app/start.sh
 
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
-ENV PORT=8888
 
 EXPOSE 8888
 
-# Hardcode 8888 to match Railway public networking; ignore broken $PORT expansion.
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8888"]
+# Shell form so Railway's runtime $PORT is expanded (JSON CMD cannot expand env vars).
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8888}
