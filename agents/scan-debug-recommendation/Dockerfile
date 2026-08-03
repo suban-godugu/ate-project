@@ -21,7 +21,4 @@ ENV API_PORT=8005
 
 EXPOSE 8005
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
-  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8005/health', timeout=5)"
-
-CMD ["python", "-m", "uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8005"]
+CMD uvicorn src.api.main:app --host 0.0.0.0 --port ${PORT:-8005}

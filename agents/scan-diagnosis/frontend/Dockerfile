@@ -1,17 +1,17 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
-COPY ate-dashboard/package.json ate-dashboard/package-lock.json ./
-RUN npm ci
+COPY package.json package-lock.json* ./
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY ate-dashboard/ ./
+COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-ARG NEXT_PUBLIC_AUTH_ENABLED=true
-ARG NEXT_PUBLIC_API_BASE_URL=/api/v1
-ENV NEXT_PUBLIC_AUTH_ENABLED=$NEXT_PUBLIC_AUTH_ENABLED
-ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_EMBED_BASE_PATH=/embed/scan
+ARG NEXT_PUBLIC_API_BASE=/embed/scan
+ENV NEXT_EMBED_BASE_PATH=$NEXT_EMBED_BASE_PATH
+ENV NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
 RUN npm run build
 
 FROM node:22-alpine AS runner
@@ -22,5 +22,5 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
-EXPOSE 3000
-CMD sh -c "npm run start -- -H 0.0.0.0 -p ${PORT:-3000}"
+EXPOSE 3030
+CMD sh -c "npx next start -H 0.0.0.0 -p ${PORT:-3030}"
