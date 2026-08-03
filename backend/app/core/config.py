@@ -1,6 +1,7 @@
 from functools import lru_cache
+import os
 
-from pydantic import field_validator
+from pydantic import AliasChoices, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -46,7 +47,16 @@ class Settings(BaseSettings):
             return [part.strip() for part in raw.split(",") if part.strip()]
         return value
 
-    minio_endpoint: str = "localhost:9000"
+    # Accept Railway MinIO template names (PRIVATE/PUBLIC) as well as MINIO_ENDPOINT.
+    minio_endpoint: str = Field(
+        default="localhost:9000",
+        validation_alias=AliasChoices(
+            "MINIO_ENDPOINT",
+            "MINIO_PRIVATE_ENDPOINT",
+            "MINIO_PUBLIC_ENDPOINT",
+            "minio_endpoint",
+        ),
+    )
     minio_access_key: str = "minioadmin"
     minio_secret_key: str = "minioadmin123"
     minio_use_ssl: bool = False
@@ -55,6 +65,38 @@ class Settings(BaseSettings):
     minio_bucket_wafer: str = "verilumen-wafer-images"
     minio_bucket_exports: str = "verilumen-exports"
     minio_bucket_ai: str = "verilumen-ai-artifacts"
+
+    @field_validator("minio_endpoint", mode="before")
+    @classmethod
+    def _normalize_minio_endpoint(cls, value: object) -> object:
+        if not isinstance(value, str) or not value.strip():
+            # Fall back to Railway template env vars if primary is blank.
+            for key in ("MINIO_ENDPOINT", "MINIO_PRIVATE_ENDPOINT", "MINIO_PUBLIC_ENDPOINT"):
+                alt = os.getenv(key)
+                if alt and alt.strip():
+                    value = alt.strip()
+                    break
+            else:
+                return value
+        endpoint = str(value).strip()
+        if endpoint.startswith("https://"):
+            endpoint = endpoint[len("https://") :]
+        elif endpoint.startswith("http://"):
+            endpoint = endpoint[len("http://") :]
+        return endpoint.rstrip("/")
+
+    @model_validator(mode="after")
+    def _minio_ssl_from_endpoint(self) -> "Settings":
+        # If user pasted an https public endpoint into env before normalize, prefer SSL.
+        raw = (
+            os.getenv("MINIO_ENDPOINT")
+            or os.getenv("MINIO_PRIVATE_ENDPOINT")
+            or os.getenv("MINIO_PUBLIC_ENDPOINT")
+            or ""
+        )
+        if raw.startswith("https://"):
+            object.__setattr__(self, "minio_use_ssl", True)
+        return self
 
     redis_url: str = "redis://localhost:6379/0"
     redis_prefix: str = "verilumen:"
