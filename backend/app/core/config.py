@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -10,6 +11,18 @@ class Settings(BaseSettings):
     app_version: str = "1.0.0"
 
     database_url: str = "postgresql+asyncpg://verilumen:verilumen@localhost:5432/verilumen"
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def _ensure_asyncpg(cls, value: object) -> object:
+        """Railway/Postgres URLs are often postgresql:// — SQLAlchemy async needs asyncpg."""
+        if not isinstance(value, str) or not value:
+            return value
+        if value.startswith("postgres://"):
+            value = "postgresql://" + value[len("postgres://") :]
+        if value.startswith("postgresql://") and not value.startswith("postgresql+asyncpg://"):
+            return "postgresql+asyncpg://" + value[len("postgresql://") :]
+        return value
 
     minio_endpoint: str = "localhost:9000"
     minio_access_key: str = "minioadmin"
