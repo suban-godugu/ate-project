@@ -25,11 +25,12 @@ def validate_settings(settings: Settings) -> None:
     if not settings.jwt_secret:
         errors.append("JWT_SECRET is required")
 
+    # Hard-fail only on missing JWT in production; MinIO can stay temporary until R2 is wired.
     if settings.environment == "production":
         if settings.jwt_secret == INSECURE_JWT:
-            errors.append("JWT_SECRET must be changed in production")
+            errors.append("JWT_SECRET must be changed in production (set any random string)")
         if settings.minio_secret_key == INSECURE_MINIO_SECRET:
-            errors.append("MINIO_SECRET_KEY must be changed in production")
+            warnings.append("Using default MINIO_SECRET_KEY — rotate when enabling uploads")
         if "changeme" in settings.database_url.lower():
             errors.append("DATABASE_URL appears to use a default password in production")
     else:

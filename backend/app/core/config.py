@@ -21,7 +21,29 @@ class Settings(BaseSettings):
         if value.startswith("postgres://"):
             value = "postgresql://" + value[len("postgres://") :]
         if value.startswith("postgresql://") and not value.startswith("postgresql+asyncpg://"):
-            return "postgresql+asyncpg://" + value[len("postgresql://") :]
+            value = "postgresql+asyncpg://" + value[len("postgresql://") :]
+        # asyncpg rejects libpq sslmode=; map to ssl=true
+        if "sslmode=" in value:
+            value = (
+                value.replace("sslmode=require", "ssl=true")
+                .replace("sslmode=verify-full", "ssl=true")
+                .replace("sslmode=verify-ca", "ssl=true")
+                .replace("sslmode=prefer", "ssl=true")
+                .replace("sslmode=disable", "ssl=false")
+            )
+        return value
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def _parse_cors_origins(cls, value: object) -> object:
+        """Accept JSON list or comma-separated origins from Railway/Vercel env vars."""
+        if isinstance(value, str):
+            raw = value.strip()
+            if not raw:
+                return ["http://localhost:3000"]
+            if raw.startswith("["):
+                return value
+            return [part.strip() for part in raw.split(",") if part.strip()]
         return value
 
     minio_endpoint: str = "localhost:9000"
