@@ -60,6 +60,8 @@ class Settings(BaseSettings):
     minio_access_key: str = "minioadmin"
     minio_secret_key: str = "minioadmin123"
     minio_use_ssl: bool = False
+    # Cloudflare R2 requires region "auto"; leave empty for classic MinIO.
+    minio_region: str = ""
     minio_bucket_raw: str = "verilumen-raw-uploads"
     minio_bucket_parsed: str = "verilumen-parsed"
     minio_bucket_wafer: str = "verilumen-wafer-images"

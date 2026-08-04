@@ -13,12 +13,16 @@ _client: Minio | None = None
 def get_minio_client() -> Minio:
     global _client
     if _client is None:
-        _client = Minio(
-            settings.minio_endpoint,
-            access_key=settings.minio_access_key,
-            secret_key=settings.minio_secret_key,
-            secure=settings.minio_use_ssl,
-        )
+        kwargs: dict = {
+            "endpoint": settings.minio_endpoint,
+            "access_key": settings.minio_access_key,
+            "secret_key": settings.minio_secret_key,
+            "secure": settings.minio_use_ssl,
+        }
+        # Cloudflare R2 (and some S3 endpoints) need an explicit region.
+        if settings.minio_region.strip():
+            kwargs["region"] = settings.minio_region.strip()
+        _client = Minio(**kwargs)
     return _client
 
 
