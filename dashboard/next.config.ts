@@ -31,11 +31,19 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/embed/failure",
-        destination: `${EMBED_TARGETS.failure}/embed/failure`,
+        destination: `${EMBED_TARGETS.failure}/overview`,
+      },
+      {
+        source: "/embed/failure/",
+        destination: `${EMBED_TARGETS.failure}/overview`,
+      },
+      {
+        source: "/embed/failure/overview",
+        destination: `${EMBED_TARGETS.failure}/overview`,
       },
       {
         source: "/embed/failure/:path*",
-        destination: `${EMBED_TARGETS.failure}/embed/failure/:path*`,
+        destination: `${EMBED_TARGETS.failure}/:path*`,
       },
       {
         source: "/embed/scan",
