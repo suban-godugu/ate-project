@@ -199,13 +199,15 @@ def ingest_stil_file(path: str | Path) -> StilIngestionResult:
                         else:
                             current_chain_lines.append(line)
 
-                pat_match = PATTERN_ANN.search(stripped)
-                if pat_match:
-                    pattern_ids.add(int(pat_match.group(1)))
-                    continue
-                numer_match = PATTERN_NUMER.search(stripped)
-                if numer_match:
-                    pattern_ids.add(int(numer_match.group(1)))
+                # Cap unique pattern ID tracking — full multi‑GB STILs can OOM a 512MB box.
+                if len(pattern_ids) < 50_000:
+                    pat_match = PATTERN_ANN.search(stripped)
+                    if pat_match:
+                        pattern_ids.add(int(pat_match.group(1)))
+                        continue
+                    numer_match = PATTERN_NUMER.search(stripped)
+                    if numer_match:
+                        pattern_ids.add(int(numer_match.group(1)))
 
     except OSError as exc:
         result.errors.append(str(exc))

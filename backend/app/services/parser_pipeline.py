@@ -164,6 +164,12 @@ class ParserPipelineService:
             original_name = job.file_name or "upload.bin"
             original_path = tmp_path / Path(original_name).name
             original_path.write_bytes(raw)
+            # Free the in-memory copy ASAP — free/Starter Render is only 512MB and
+            # API + ARQ share the same instance (OOM killed 17MB+ STIL parses).
+            del raw
+            import gc
+
+            gc.collect()
 
             ext = original_path.suffix.lower()
             if ext and ext not in ALLOWED_EXTENSIONS:
@@ -237,8 +243,15 @@ class ParserPipelineService:
                 await mark_stage(db, job, PipelineStage.parsing, status="active")
 
                 # Mixed ZIP uploads (STIL + ATE logs) need per-file profiles.
-                log_like = path.suffix.lower() in {".log", ".txt"}
-                profile = "diagnosis" if job.kind.value == "log" or log_like else "auto"
+                # Use diagnosis for STIL too: full "auto/failure" STIL ingest scans the
+                # entire pattern body and OOMs on Render free 512MB (API+worker colocated).
+                suffix = path.suffix.lower()
+                log_like = suffix in {".log", ".txt"}
+                stil_like = suffix in {".stil", ".stil.gz"}
+                if job.kind.value == "log" or log_like or stil_like:
+                    profile = "diagnosis"
+                else:
+                    profile = "auto"
                 ctx = ParseContext(profile=profile, max_size_bytes=settings.max_upload_bytes, enable_cache=False)
                 outcome = engine.parse(path, ctx=ctx, use_cache=False)
 
@@ -265,6 +278,9 @@ class ParserPipelineService:
                 ]
                 await repo.bulk_insert_normalized(db, job.id, parser_job.id, mapped, parsed_file_id=pf.id)
                 all_records.extend(UnifiedDatasetRecord.model_validate(m) for m in mapped)
+                # Drop parse buffers before the next large file (log + stil).
+                del outcome, mapped
+                gc.collect()
 
             if not all_records:
                 from app.services.log_enrichment import parse_log_files

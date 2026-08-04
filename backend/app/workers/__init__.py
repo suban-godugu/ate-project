@@ -26,6 +26,7 @@ class WorkerSettings:
         train_recommendation,
     ]
     redis_settings = RedisSettings.from_dsn(settings.redis_url)
-    max_jobs = 10
+    # Keep at 1 when API+worker share a 512MB Render instance (avoids parallel OOM).
+    max_jobs = 1
     job_timeout = 1800
     on_startup = on_worker_startup
