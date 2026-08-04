@@ -73,18 +73,15 @@ export function AppLayout() {
 
   if (embedMode) {
     return (
-      <div className="min-h-screen bg-[#090b12]">
-        <main className="flex-1 px-0 py-0">
+      <div className="h-full min-h-0 overflow-x-hidden bg-[#090b12]">
+        <main className="min-w-0">
           {errors.length > 0 ? (
-            <div className="mb-4 space-y-2 px-4">
-              {errors.map((err) => (
-                <div
-                  key={err}
-                  className="rounded-xl border border-amber-500/25 bg-amber-500/10 px-4 py-2 text-sm text-amber-200"
-                >
-                  {err}
-                </div>
-              ))}
+            <div className="border-b border-amber-500/20 bg-amber-500/10 px-3 py-1.5">
+              <p className="truncate text-[11px] text-amber-200" title={errors.join(' · ')}>
+                {errors.length === 1
+                  ? errors[0]
+                  : `${errors.length} data sources unavailable — ${errors[0]}`}
+              </p>
             </div>
           ) : null}
           {loading ? <LoadingSpinner label="Loading dashboard data…" /> : <Outlet />}
@@ -94,7 +91,7 @@ export function AppLayout() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen overflow-x-hidden">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopNavbar
@@ -108,17 +105,14 @@ export function AppLayout() {
           refreshing={refreshing}
           healthOk={healthOk}
         />
-        <main className="flex-1 px-4 py-5 lg:px-6">
+        <main className="min-w-0 flex-1 overflow-x-hidden px-3 py-4 lg:px-5">
           {errors.length > 0 ? (
-            <div className="mb-4 space-y-2">
-              {errors.map((err) => (
-                <div
-                  key={err}
-                  className="rounded-xl border border-amber-500/25 bg-amber-500/10 px-4 py-2 text-sm text-amber-200"
-                >
-                  {err}
-                </div>
-              ))}
+            <div className="mb-3 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3 py-2">
+              <p className="text-xs text-amber-200" title={errors.join(' · ')}>
+                {errors.length === 1
+                  ? errors[0]
+                  : `${errors.length} data sources unavailable — open Settings for details.`}
+              </p>
             </div>
           ) : null}
           {loading ? <LoadingSpinner label="Loading dashboard data…" /> : <Outlet />}

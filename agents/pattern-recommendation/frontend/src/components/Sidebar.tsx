@@ -12,6 +12,7 @@ import {
   Trash2,
   Zap,
 } from 'lucide-react'
+import { useEmbedMode, withEmbedParam } from '@/hooks/useEmbedMode'
 
 const navItems = [
   { to: '/', label: 'Overview', icon: LayoutDashboard },
@@ -31,6 +32,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ open, onClose }: SidebarProps) {
+  const embed = useEmbedMode()
+
   return (
     <>
       <div
@@ -38,44 +41,44 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         onClick={onClose}
       />
       <aside
-        className={`fixed top-0 left-0 z-40 flex h-full w-64 flex-col border-r border-white/8 bg-surface-900/95 backdrop-blur-md transition-transform lg:static lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-40 flex h-full w-56 shrink-0 flex-col border-r border-white/8 bg-surface-900/95 backdrop-blur-md transition-transform lg:static lg:translate-x-0 ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center gap-3 border-b border-white/8 px-5 py-5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-600/20 text-accent-400">
-            <CircuitBoard size={20} />
+        <div className="flex items-center gap-2.5 border-b border-white/8 px-3 py-3.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-600/20 text-accent-400">
+            <CircuitBoard size={18} />
           </div>
-          <div>
-            <p className="text-sm font-semibold text-ink-100">Pattern Rec</p>
-            <p className="text-xs text-ink-400">Enterprise console</p>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-ink-100">Pattern Rec</p>
+            <p className="truncate text-[11px] text-ink-400">Enterprise console</p>
           </div>
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-3">
           {navItems.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
-              to={to}
+              to={withEmbedParam(to, embed)}
               end={to === '/'}
               onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${
+                `flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] transition ${
                   isActive
                     ? 'bg-accent-600/20 text-accent-400'
                     : 'text-ink-300 hover:bg-white/5 hover:text-ink-100'
                 }`
               }
             >
-              <Icon size={17} />
-              {label}
+              <Icon size={16} className="shrink-0" />
+              <span className="truncate">{label}</span>
             </NavLink>
           ))}
         </nav>
 
-        <div className="border-t border-white/8 px-4 py-4">
-          <div className="flex items-center gap-2 rounded-xl bg-surface-850 px-3 py-2 text-xs text-ink-400">
-            <Activity size={14} className="text-accent-400" />
+        <div className="border-t border-white/8 px-3 py-3">
+          <div className="flex items-center gap-2 rounded-lg bg-surface-850 px-2.5 py-1.5 text-[11px] text-ink-400">
+            <Activity size={13} className="text-accent-400" />
             FastAPI · live
           </div>
         </div>

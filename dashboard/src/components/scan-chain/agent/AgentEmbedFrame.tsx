@@ -44,8 +44,9 @@ export function AgentEmbedFrame({
   const [probeOk, setProbeOk] = useState(false);
   const [probing, setProbing] = useState(false);
   const workspaceClass = "overflow-hidden bg-[#090b12]";
+  // Taller iframe so dense agent UIs (Pattern Rec overview) fit without double chrome scroll.
   const iframeClass =
-    "min-h-[calc(100vh-160px)] h-[calc(100vh-160px)] w-full border-0 bg-[#090b12]";
+    "min-h-[calc(100vh-132px)] h-[calc(100vh-132px)] w-full border-0 bg-[#090b12]";
 
   useEffect(() => {
     if (!isLive || showEmbedded || !dashboardUrl.startsWith("/embed/")) {

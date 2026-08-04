@@ -1,8 +1,10 @@
 /**
  * Serve Vite `dist/` under /embed/pattern-rec without directory listings.
  * Maps /embed/pattern-rec/* -> dist/* and SPA-fallbacks to index.html.
+ * Proxies /embed/pattern-rec/api-proxy/* -> Pattern Rec API (Render).
  */
 import http from "node:http";
+import https from "node:https";
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { extname, join, dirname, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,7 +13,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 const distRoot = join(root, "dist");
 const BASE = "/embed/pattern-rec";
+const PROXY_PREFIX = `${BASE}/api-proxy`;
 const port = Number(process.env.PORT || 3041);
+const apiTarget = (
+  process.env.API_PROXY_TARGET ||
+  process.env.PATTERN_REC_API_URL ||
+  "https://ate-prec-api.onrender.com"
+).replace(/\/$/, "");
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -39,6 +47,36 @@ function sendIndex(res) {
   sendFile(res, join(distRoot, "index.html"));
 }
 
+function proxyApi(req, res) {
+  const qs = (req.url || "").includes("?") ? `?${(req.url || "").split("?")[1]}` : "";
+  const pathOnly = (req.url || "").split("?")[0];
+  const upstreamPath = pathOnly.slice(PROXY_PREFIX.length) || "/";
+  const targetUrl = new URL(
+    `${upstreamPath.startsWith("/") ? upstreamPath : `/${upstreamPath}`}${qs}`,
+    `${apiTarget}/`,
+  );
+
+  const transport = targetUrl.protocol === "https:" ? https : http;
+  const headers = { ...req.headers, host: targetUrl.host };
+  delete headers["accept-encoding"];
+
+  const upstream = transport.request(
+    targetUrl,
+    { method: req.method, headers },
+    (upRes) => {
+      res.writeHead(upRes.statusCode || 502, upRes.headers);
+      upRes.pipe(res);
+    },
+  );
+
+  upstream.on("error", (err) => {
+    res.writeHead(502, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ message: `API proxy error: ${err.message}` }));
+  });
+
+  req.pipe(upstream);
+}
+
 if (!existsSync(join(distRoot, "index.html"))) {
   console.error("dist/index.html missing — run npm run build first");
   process.exit(1);
@@ -52,6 +90,11 @@ http
     if (urlPath === "/" || urlPath === "") {
       res.writeHead(302, { Location: `${BASE}/` });
       res.end();
+      return;
+    }
+
+    if (urlPath === PROXY_PREFIX || urlPath.startsWith(`${PROXY_PREFIX}/`)) {
+      proxyApi(req, res);
       return;
     }
 
@@ -86,4 +129,5 @@ http
   })
   .listen(port, "0.0.0.0", () => {
     console.log(`pattern-rec UI on http://0.0.0.0:${port}${BASE}/`);
+    console.log(`api proxy ${PROXY_PREFIX} -> ${apiTarget}`);
   });
