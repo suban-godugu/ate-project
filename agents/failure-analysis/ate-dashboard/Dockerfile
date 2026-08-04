@@ -1,12 +1,12 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
-COPY ate-dashboard/package.json ate-dashboard/package-lock.json ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY ate-dashboard/ ./
+COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ARG NEXT_PUBLIC_AUTH_ENABLED=false
 ARG NEXT_PUBLIC_API_BASE_URL=/api/v1
@@ -28,4 +28,4 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
 EXPOSE 3000
-CMD sh -c "npm run start -- -H 0.0.0.0 -p ${PORT:-3000}"
+CMD ["sh", "-c", "exec npm run start -- -H 0.0.0.0 -p ${PORT:-3000}"]
