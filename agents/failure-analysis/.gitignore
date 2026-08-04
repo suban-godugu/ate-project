@@ -37,13 +37,14 @@ htmlcov/
 .pytest_cache/
 coverage/
 
-# Misc generated JSON (keep config JSON)
+# Misc generated JSON (keep config + Node manifests)
 *.json
-!package.json
-!package-lock.json
-!tsconfig.json
-!components.json
-!.cursor/hooks.json
+!**/package.json
+!**/package-lock.json
+!**/tsconfig.json
+!**/components.json
+!**/.cursor/hooks.json
+!config/**/*.json
 !ate-dashboard/package.json
 !ate-dashboard/package-lock.json
 !ate-dashboard/tsconfig.json
