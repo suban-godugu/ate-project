@@ -22,7 +22,7 @@ const NAV = [
 export function Sidebar() {
   const pathname = usePathname();
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-border/80 bg-[#0B0F1A]/90 px-3 py-4 backdrop-blur-xl">
+    <aside className="flex w-52 shrink-0 flex-col border-r border-border/80 bg-[#0B0F1A]/90 px-2.5 py-3 backdrop-blur-xl">
       <div className="mb-8 flex items-center gap-2 px-2">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/20 text-primary">
           <Sparkles size={18} />

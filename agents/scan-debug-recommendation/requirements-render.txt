@@ -1,0 +1,4 @@
+# Lean Render deploy — full torch/gym stack needs restored src/data + src/models
+fastapi>=0.100.0
+uvicorn>=0.22.0
+pydantic>=2.0.0
