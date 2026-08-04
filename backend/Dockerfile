@@ -18,5 +18,5 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8888
 
-# Shell form so Railway's runtime $PORT is expanded (JSON CMD cannot expand env vars).
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8888}
+# start.sh runs ARQ worker + uvicorn (PORT expanded at runtime).
+CMD ["/app/start.sh"]
