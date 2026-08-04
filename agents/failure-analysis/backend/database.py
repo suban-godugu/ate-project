@@ -75,16 +75,22 @@ def create_engine() -> AsyncEngine:
             "SQLite URLs are rejected. This application uses PostgreSQL exclusively."
         )
 
+    connect_args: dict = {}
+    # asyncpg + Render: ensure TLS even if URL omitted ssl=
+    if "render.com" in url and "ssl=" not in url:
+        connect_args["ssl"] = True
+
     try:
         return create_async_engine(
             url,
             echo=False,
             future=True,
-            pool_size=settings.db_pool_size,
-            max_overflow=settings.db_max_overflow,
+            pool_size=min(settings.db_pool_size, 5),
+            max_overflow=min(settings.db_max_overflow, 5),
             pool_timeout=settings.db_pool_timeout,
             pool_recycle=settings.db_pool_recycle,
             pool_pre_ping=True,
+            connect_args=connect_args,
         )
     except DatabaseConfigurationError:
         raise
@@ -92,8 +98,9 @@ def create_engine() -> AsyncEngine:
         raise _map_driver_error(exc) from None
 
 
-engine: AsyncEngine = create_engine()
-SessionLocal = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+# Lazy placeholders — real engine created in lifespan via rebind_engine().
+engine: AsyncEngine | None = None
+SessionLocal: async_sessionmaker[AsyncSession] | None = None
 
 
 def rebind_engine() -> AsyncEngine:
@@ -111,6 +118,9 @@ def rebind_engine() -> AsyncEngine:
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """FastAPI dependency — yields an async session and closes it afterwards."""
+    if SessionLocal is None:
+        rebind_engine()
+    assert SessionLocal is not None
     async with SessionLocal() as session:
         try:
             yield session
@@ -122,6 +132,9 @@ async def validate_connection() -> None:
     """Verify credentials, host/port reachability, and pool health."""
     settings = get_settings()
     settings.assert_credentials_ready()
+    if engine is None:
+        rebind_engine()
+    assert engine is not None
     logger.info("Database Type      : PostgreSQL")
     logger.info("Database Host      : %s", settings.database_host)
     logger.info("Database Port      : %s", settings.database_port)
@@ -151,6 +164,10 @@ async def init_db() -> None:
     of truth for future schema evolution (see ``alembic/``).
     """
     from backend import models  # noqa: F401 — register models on Base.metadata
+
+    if engine is None:
+        rebind_engine()
+    assert engine is not None
 
     try:
         await validate_connection()
@@ -183,5 +200,9 @@ async def init_db() -> None:
 
 async def dispose_engine() -> None:
     """Dispose the connection pool on application shutdown."""
-    await engine.dispose()
+    global engine, SessionLocal
+    if engine is not None:
+        await engine.dispose()
+    engine = None
+    SessionLocal = None
     logger.info("Connection Pool    : disposed")

@@ -96,13 +96,20 @@ class Settings(BaseSettings):
         ):
             if text.startswith("postgresql://") or text.startswith("postgres://"):
                 # Normalize sync-style URLs to asyncpg
-                return text.replace("postgresql://", "postgresql+asyncpg://", 1).replace(
+                text = text.replace("postgresql://", "postgresql+asyncpg://", 1).replace(
                     "postgres://", "postgresql+asyncpg://", 1
                 )
-            raise ValueError(
-                "DATABASE_URL must use the asyncpg driver "
-                "(postgresql+asyncpg://user:pass@host:port/dbname)."
-            )
+            else:
+                raise ValueError(
+                    "DATABASE_URL must use the asyncpg driver "
+                    "(postgresql+asyncpg://user:pass@host:port/dbname)."
+                )
+        # Render / managed Postgres: asyncpg wants ssl=true, not sslmode=require
+        text = text.replace("sslmode=require", "ssl=true").replace(
+            "sslmode=prefer", "ssl=true"
+        )
+        if "render.com" in text and "ssl=" not in text:
+            text = f"{text}&ssl=true" if "?" in text else f"{text}?ssl=true"
         return text
 
     @model_validator(mode="after")
