@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+function ShellInner({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const embedMode = searchParams?.get("embed") === "1";
 
@@ -30,5 +31,19 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
     </div>
+  );
+}
+
+export function DashboardShell({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-[#090b12] text-sm text-slate-400">
+          Loading Scan Debug workspace…
+        </div>
+      }
+    >
+      <ShellInner>{children}</ShellInner>
+    </Suspense>
   );
 }
