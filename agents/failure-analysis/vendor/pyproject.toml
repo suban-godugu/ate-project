@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parser-engine"
+version = "2.0.0"
+description = "Shared Parser Engine for VERILUMEN Scan Chain agents (v1 + additive v2)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "pandas>=2.2.0",
+  "pyarrow>=16.0.0",
+  "pyyaml>=6.0.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["parser_engine*"]
