@@ -6,7 +6,7 @@ export function useEmbedMode(): boolean {
   return new URLSearchParams(search).get('embed') === '1'
 }
 
-/** Keep ?embed=1 on internal links so chrome stays hidden in the iframe. */
+/** Keep ?embed=1 on internal links so iframe navigation stays in embed mode. */
 export function withEmbedParam(to: string, embed: boolean): string {
   if (!embed) return to
   const [path, qs = ''] = to.split('?')

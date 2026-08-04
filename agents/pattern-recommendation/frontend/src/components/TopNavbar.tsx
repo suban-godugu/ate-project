@@ -1,6 +1,7 @@
 import { Menu, RefreshCw, Upload, UserRound } from 'lucide-react'
 import { SearchBar } from './SearchBar'
 import { Badge } from './Badge'
+import { useEmbedMode } from '@/hooks/useEmbedMode'
 
 interface TopNavbarProps {
   title: string
@@ -25,16 +26,20 @@ export function TopNavbar({
   refreshing,
   healthOk,
 }: TopNavbarProps) {
+  const embed = useEmbedMode()
+
   return (
-    <header className="sticky top-0 z-20 border-b border-white/8 bg-surface-950/70 backdrop-blur-md">
-      <div className="flex flex-wrap items-center gap-2 px-3 py-2.5 lg:px-5">
-        <button
-          type="button"
-          onClick={onMenuClick}
-          className="rounded-lg border border-white/10 p-1.5 text-ink-300 lg:hidden hover:bg-white/5"
-        >
-          <Menu size={18} />
-        </button>
+    <header className="sticky top-0 z-20 shrink-0 border-b border-white/8 bg-surface-950/70 backdrop-blur-md">
+      <div className="flex flex-wrap items-center gap-2 px-3 py-2 lg:px-4">
+        {!embed ? (
+          <button
+            type="button"
+            onClick={onMenuClick}
+            className="rounded-lg border border-white/10 p-1.5 text-ink-300 lg:hidden hover:bg-white/5"
+          >
+            <Menu size={18} />
+          </button>
+        ) : null}
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">

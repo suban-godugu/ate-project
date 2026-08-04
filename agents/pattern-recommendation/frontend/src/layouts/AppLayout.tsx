@@ -69,29 +69,15 @@ export function AppLayout() {
     [location.pathname],
   )
 
-  const embedMode = new URLSearchParams(location.search).get("embed") === "1"
+  const embedMode = new URLSearchParams(location.search).get('embed') === '1'
 
-  if (embedMode) {
-    return (
-      <div className="h-full min-h-0 overflow-x-hidden bg-[#090b12]">
-        <main className="min-w-0">
-          {errors.length > 0 ? (
-            <div className="border-b border-amber-500/20 bg-amber-500/10 px-3 py-1.5">
-              <p className="truncate text-[11px] text-amber-200" title={errors.join(' · ')}>
-                {errors.length === 1
-                  ? errors[0]
-                  : `${errors.length} data sources unavailable — ${errors[0]}`}
-              </p>
-            </div>
-          ) : null}
-          {loading ? <LoadingSpinner label="Loading dashboard data…" /> : <Outlet />}
-        </main>
-      </div>
-    )
-  }
-
+  // Same chrome as standalone (sidebar + top bar) — embed only densifies spacing.
   return (
-    <div className="flex min-h-screen overflow-x-hidden">
+    <div
+      className={`flex overflow-x-hidden bg-[#090b12] ${
+        embedMode ? 'h-full min-h-0' : 'min-h-screen'
+      }`}
+    >
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopNavbar
@@ -105,13 +91,24 @@ export function AppLayout() {
           refreshing={refreshing}
           healthOk={healthOk}
         />
-        <main className="min-w-0 flex-1 overflow-x-hidden px-3 py-4 lg:px-5">
+        <main
+          className={`min-w-0 flex-1 overflow-x-hidden overflow-y-auto ${
+            embedMode ? 'px-2 py-2 lg:px-3' : 'px-3 py-4 lg:px-5'
+          }`}
+        >
           {errors.length > 0 ? (
-            <div className="mb-3 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3 py-2">
-              <p className="text-xs text-amber-200" title={errors.join(' · ')}>
+            <div
+              className={`mb-2 rounded-xl border border-amber-500/25 bg-amber-500/10 ${
+                embedMode ? 'px-2.5 py-1.5' : 'px-3 py-2'
+              }`}
+            >
+              <p
+                className={`text-amber-200 ${embedMode ? 'truncate text-[11px]' : 'text-xs'}`}
+                title={errors.join(' · ')}
+              >
                 {errors.length === 1
                   ? errors[0]
-                  : `${errors.length} data sources unavailable — open Settings for details.`}
+                  : `${errors.length} data sources unavailable — ${errors[0]}`}
               </p>
             </div>
           ) : null}

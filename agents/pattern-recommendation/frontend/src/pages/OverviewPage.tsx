@@ -74,7 +74,7 @@ export function OverviewPage() {
   const chartPad = embed ? 'card-surface rounded-xl p-2.5' : 'card-surface p-4'
 
   return (
-    <div className={`min-w-0 overflow-x-hidden ${sectionGap} ${embed ? 'px-3 py-3' : ''}`}>
+    <div className={`min-w-0 overflow-x-hidden ${sectionGap}`}>
       <section>
         <h2 className={heading}>Failure health</h2>
         <div
