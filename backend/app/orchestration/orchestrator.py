@@ -76,10 +76,24 @@ class AgentOrchestrator:
             return {"ok": False, "error": "dataset_missing"}
 
         dataset_url = get_presigned_get_url(settings.minio_bucket_parsed, dataset_key, expires=7200)
-        # Prefer local dataset path for agents (same host / shared FS); fall back to MinIO URL
+        # Local path only works when agents share this host's filesystem.
+        # On Render (separate services) always pass the R2/MinIO presigned URL.
         artifact_store.ensure_job_tree(upload_job_id)
         local_dataset = artifact_store.dataset_path(upload_job_id)
-        dataset_path = str(local_dataset) if local_dataset.exists() else dataset_url
+        agent_urls = (
+            settings.pattern_agent_base_url,
+            settings.failure_agent_api_url,
+            settings.scan_diagnosis_agent_api_url,
+        )
+        agents_remote = any(
+            u and "127.0.0.1" not in u and "localhost" not in u.lower() for u in agent_urls
+        )
+        if agents_remote:
+            dataset_path = dataset_url
+        elif local_dataset.exists():
+            dataset_path = str(local_dataset)
+        else:
+            dataset_path = dataset_url
 
         stage = normalize_retry_stage(from_stage, parser.failed_stage)
         job.status = UploadStatus.processing
