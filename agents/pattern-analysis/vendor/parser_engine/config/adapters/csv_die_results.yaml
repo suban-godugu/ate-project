@@ -1,0 +1,23 @@
+adapter_id: csv_die_results
+format: csv
+detect:
+  extension: ".csv"
+  required_columns: [Lot, Wafer, Die, Result]
+columns:
+  lot_id: Lot
+  wafer_id: Wafer
+  die_id: Die
+  pass_fail: Result
+  hard_bin: HardBin
+  soft_bin: SoftBin
+  failing_patterns: FailingPatterns
+  failing_tests: FailingTests
+  product_id: Product
+  tester_id: Tester
+  test_stage: Stage
+  timestamp: Timestamp
+  x: X
+  y: Y
+defaults:
+  test_stage: CP
+  tester_id: CSV_TESTER
