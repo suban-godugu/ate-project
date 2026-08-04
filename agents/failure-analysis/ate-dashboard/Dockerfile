@@ -1,8 +1,10 @@
 # Use Debian slim — Alpine often fails Next.js builds (sharp / native deps).
 FROM node:22-bookworm-slim AS deps
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json ./
+# package-lock may be missing if Root Directory is wrong; prefer ci when present.
+COPY package-lock.json* ./
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 FROM node:22-bookworm-slim AS builder
 WORKDIR /app
