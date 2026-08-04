@@ -45,7 +45,9 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         />
       ) : null}
       <aside
-        className={`z-40 flex h-full w-52 shrink-0 flex-col border-r border-white/8 bg-surface-900/95 backdrop-blur-md transition-transform ${
+        className={`z-40 flex shrink-0 flex-col border-r border-white/8 bg-surface-900/95 backdrop-blur-md transition-transform ${
+          alwaysShow ? 'h-full w-52' : 'h-full w-56'
+        } ${
           alwaysShow
             ? 'static translate-x-0'
             : `fixed top-0 left-0 lg:static lg:translate-x-0 ${

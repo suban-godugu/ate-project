@@ -32,7 +32,11 @@ export function TabPanelHost<T extends string>({
         return (
           <div
             key={tabId}
-            className={cn(className, activeTab !== tabId && "hidden")}
+            className={cn(
+              className,
+              "min-h-0",
+              activeTab !== tabId && "hidden",
+            )}
             aria-hidden={activeTab !== tabId}
           >
             <TabComponent />

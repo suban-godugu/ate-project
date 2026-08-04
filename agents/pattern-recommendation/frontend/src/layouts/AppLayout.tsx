@@ -71,15 +71,16 @@ export function AppLayout() {
 
   const embedMode = new URLSearchParams(location.search).get('embed') === '1'
 
-  // Same chrome as standalone (sidebar + top bar) — embed only densifies spacing.
+  // Same chrome as standalone (sidebar + top bar). Embed fills the iframe height
+  // so the sidebar does not collapse when parent % height is unresolved.
   return (
     <div
       className={`flex overflow-x-hidden bg-[#090b12] ${
-        embedMode ? 'h-full min-h-0' : 'min-h-screen'
+        embedMode ? 'h-[100dvh] max-h-[100dvh]' : 'min-h-screen'
       }`}
     >
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <TopNavbar
           title={meta.title}
           subtitle={meta.subtitle}
@@ -92,7 +93,7 @@ export function AppLayout() {
           healthOk={healthOk}
         />
         <main
-          className={`min-w-0 flex-1 overflow-x-hidden overflow-y-auto ${
+          className={`min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto ${
             embedMode ? 'px-2 py-2 lg:px-3' : 'px-3 py-4 lg:px-5'
           }`}
         >

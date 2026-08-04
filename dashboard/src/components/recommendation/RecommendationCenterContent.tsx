@@ -21,8 +21,18 @@ export function RecommendationCenterContent() {
 
   return (
     <ModuleTabProvider tab={activeTab}>
-      <AgentTabs activeTab={activeTab} onTabChange={setActiveTab} />
-      <TabPanelHost activeTab={activeTab} tabs={tabContent} />
+      <div className="flex h-[calc(100vh-72px-48px)] min-h-0 flex-col">
+        <div className="shrink-0">
+          <AgentTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <TabPanelHost
+            activeTab={activeTab}
+            tabs={tabContent}
+            className="mt-0 h-full"
+          />
+        </div>
+      </div>
     </ModuleTabProvider>
   );
 }
