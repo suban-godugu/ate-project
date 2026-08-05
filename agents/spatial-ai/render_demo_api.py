@@ -41,18 +41,37 @@ _DEFAULT_ORIGINS = (
     "http://127.0.0.1:3000"
 )
 
-# Filename tokens → class (order matters: longer / specific first)
-_FILENAME_RULES: list[tuple[re.Pattern[str], str]] = [
-    (re.compile(r"near[-_]?full|nearfull", re.I), "Near-Full"),
-    (re.compile(r"edge[-_]?ring|edgering", re.I), "Edge-Ring"),
-    (re.compile(r"edge[-_]?loc|edgeloc|\bEL[_-]", re.I), "Edge-Loc"),
-    (re.compile(r"\bscratch\b|\bS[_-]\d", re.I), "Scratch"),
-    (re.compile(r"\brandom\b", re.I), "Random"),
-    (re.compile(r"\bnormal\b", re.I), "Normal"),
-    (re.compile(r"\blocal\b", re.I), "Local"),
-    (re.compile(r"\bdonut\b", re.I), "Donut"),
-    (re.compile(r"\bcenter\b", re.I), "Center"),
+# Filename tokens → class (checked in order; first match wins)
+_FILENAME_ALIASES: list[tuple[str, str]] = [
+    ("near-full", "Near-Full"),
+    ("near_full", "Near-Full"),
+    ("nearfull", "Near-Full"),
+    ("edge-ring", "Edge-Ring"),
+    ("edge_ring", "Edge-Ring"),
+    ("edgering", "Edge-Ring"),
+    ("edge-loc", "Edge-Loc"),
+    ("edge_loc", "Edge-Loc"),
+    ("edgeloc", "Edge-Loc"),
+    ("_el_", "Edge-Loc"),
+    ("-el-", "Edge-Loc"),
+    ("scratch", "Scratch"),
+    ("_s_", "Scratch"),  # image_S_37351 style
+    ("-s-", "Scratch"),
+    ("random", "Random"),
+    ("normal", "Normal"),
+    ("local", "Local"),
+    ("donut", "Donut"),
+    ("center", "Center"),
 ]
+
+
+def detect_defect_from_filename(filename: str) -> str | None:
+    """Map labeled dataset filenames to one of the 9 defect classes."""
+    base = filename.replace("\\", "/").split("/")[-1].lower()
+    for token, defect in _FILENAME_ALIASES:
+        if token in base:
+            return defect
+    return None
 
 
 def _origins() -> list[str]:
@@ -72,15 +91,6 @@ app.add_middleware(
 
 def _seed(name: str) -> int:
     return int(hashlib.md5(name.encode()).hexdigest()[:8], 16)
-
-
-def detect_defect_from_filename(filename: str) -> str | None:
-    """Map labeled dataset filenames to one of the 9 defect classes."""
-    base = filename.replace("\\", "/").split("/")[-1]
-    for pattern, defect in _FILENAME_RULES:
-        if pattern.search(base):
-            return defect
-    return None
 
 
 def _in_wafer(r: int, c: int, rows: int, cols: int) -> bool:
