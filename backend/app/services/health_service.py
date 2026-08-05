@@ -210,6 +210,19 @@ def check_test_optimization_agent_dashboard() -> dict[str, Any]:
     )
 
 
+def check_wafer_agent_dashboard() -> dict[str, Any]:
+    api_url = settings.wafer_agent_api_url.rstrip("/")
+    dashboard_url = settings.wafer_agent_dashboard_url.rstrip("/")
+    return _check_dashboard_integration(
+        name="wafervision-agent",
+        dashboard_url=dashboard_url,
+        docs_url=f"{api_url}/docs",
+        api_url=api_url,
+        health_url=f"{api_url}/health",
+        embed_path="/dashboard/wafervision",
+    )
+
+
 async def check_database() -> tuple[bool, str]:
     try:
         async with AsyncSessionLocal() as db:

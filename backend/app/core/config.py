@@ -129,6 +129,9 @@ class Settings(BaseSettings):
     scan_debug_recommendation_agent_dashboard_url: str = "http://127.0.0.1:3042/embed/scan-debug-rec/dashboard/recommendation-analysis"
     test_optimization_agent_api_url: str = "http://127.0.0.1:8043"
     test_optimization_agent_dashboard_url: str = "http://127.0.0.1:3043/embed/test-opt/"
+    # WaferVision / Spatial AI (image wafer maps — separate from STIL+log pipeline)
+    wafer_agent_api_url: str = "http://127.0.0.1:8000"
+    wafer_agent_dashboard_url: str = "http://127.0.0.1:3000/dashboard/wafervision"
 
     verilumen_service_key: str = "dev-service-key-change-me"
     agent_http_timeout_sec: float = 600.0

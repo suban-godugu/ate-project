@@ -14,6 +14,7 @@ from app.services.health_service import (
     check_pattern_recommendation_agent_dashboard,
     check_scan_debug_recommendation_agent_dashboard,
     check_test_optimization_agent_dashboard,
+    check_wafer_agent_dashboard,
     full_health_payload,
     ready_payload,
     refresh_gauge_metrics,
@@ -82,3 +83,8 @@ async def scan_debug_recommendation_agent_health():
 )
 async def test_optimization_agent_health():
     return check_test_optimization_agent_dashboard()
+
+
+@integration_router.get("/wafer-agent/health", response_model=IntegrationHealthOut)
+async def wafer_agent_health():
+    return check_wafer_agent_dashboard()
