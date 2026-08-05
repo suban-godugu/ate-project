@@ -96,8 +96,12 @@ def cell_name_at(chain_id: str, position: int) -> str:
 
 
 def build_cell_order(chain_id: str, scan_length: int) -> list[str]:
-    """Ordered list of cell names, index = bit position from ScanOut."""
-    return [cell_name_at(chain_id, i) for i in range(scan_length)]
+    """Ordered list of cell names, index = bit position from ScanOut.
+
+    Cap length so huge ScanLength values cannot OOM a 512MB Render free box.
+    """
+    n = min(max(int(scan_length or 0), 0), 128)
+    return [cell_name_at(chain_id, i) for i in range(n)]
 
 
 def _infer_instance_type(chain_id: str) -> str:

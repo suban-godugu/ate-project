@@ -136,6 +136,9 @@ class Settings(BaseSettings):
     # Fast platform orchestration: Pattern dataset KPIs + Failure skip Postgres ingest.
     # Set AGENT_FAST_MODE=false to force full Pattern Validate + FA dual-write.
     agent_fast_mode: bool = True
+    # Free-tier safe parse: stream download + lighter STIL/log handling (avoids 512MB OOM).
+    # Set PARSER_LIGHT_MODE=false for full-fidelity parse on a 2GB+ instance.
+    parser_light_mode: bool = True
     parser_engine_path: str = r"C:\personal\parser engine"
     agent_output_root: str = r"C:\personal\agent and parser output"
     upload_input_root: str = r"C:\personal\input all file"

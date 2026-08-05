@@ -52,6 +52,37 @@ def get_object_bytes(bucket: str, object_key: str) -> bytes:
             response.release_conn()
 
 
+def download_object_to_path(bucket: str, object_key: str, dest_path: str | Path) -> tuple[int, str]:
+    """Stream object to disk (avoids holding large ZIPs in RAM on 512MB instances).
+
+    Returns (size_bytes, sha256_hex).
+    """
+    import hashlib
+    from pathlib import Path as _Path
+
+    path = _Path(dest_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    client = get_minio_client()
+    digest = hashlib.sha256()
+    size = 0
+    response = None
+    try:
+        response = client.get_object(bucket, object_key)
+        with path.open("wb") as out:
+            while True:
+                chunk = response.read(1024 * 1024)
+                if not chunk:
+                    break
+                out.write(chunk)
+                digest.update(chunk)
+                size += len(chunk)
+    finally:
+        if response is not None:
+            response.close()
+            response.release_conn()
+    return size, digest.hexdigest()
+
+
 def build_raw_upload_key(kind: str, job_id: str, filename: str, year: int, month: int) -> str:
     return f"{kind}/{year:04d}/{month:02d}/{job_id}/{filename}"
 

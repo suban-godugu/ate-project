@@ -25,7 +25,7 @@ from app.models.pipeline import ParserJobStatus
 from app.models.uploads import UploadJob, UploadStatus
 from app.orchestration.progress import fail_stage, mark_stage
 from app.repositories import pipeline_repo as repo
-from app.storage.minio_client import get_object_bytes, put_object_bytes
+from app.storage.minio_client import get_object_bytes, download_object_to_path, put_object_bytes
 
 log = logging.getLogger("verilumen.parser_pipeline")
 settings = get_settings()
@@ -109,64 +109,61 @@ class ParserPipelineService:
         t0 = time.perf_counter()
         await mark_stage(db, job, PipelineStage.validating, status="active", upload_status=UploadStatus.parsing)
 
-        raw = get_object_bytes(job.minio_bucket, job.minio_object_key)
-        if settings.max_upload_bytes and len(raw) > settings.max_upload_bytes:
-            await fail_stage(db, job, PipelineStage.validating, f"File exceeds max size {settings.max_upload_bytes}")
-            await db.commit()
-            return {"ok": False, "error": "FILE_TOO_LARGE"}
-
-        sha = _sha256_bytes(raw)
-        job.checksum_sha256 = sha
-        await mark_stage(db, job, PipelineStage.validating, status="done")
-
-        dup = await repo.find_duplicate_by_sha256(db, sha, job.id)
-        parser_job = await repo.create_parser_job(db, job.id, sha256=sha, status=ParserJobStatus.running)
-
-        if dup and dup.unified_dataset_key:
-            parser_job.status = ParserJobStatus.skipped_duplicate
-            parser_job.duplicate_of = dup.id
-            parser_job.unified_dataset_key = dup.unified_dataset_key
-            parser_job.parser_id = dup.parser_id
-            parser_job.confidence = dup.confidence
-            parser_job.completed_at = datetime.now(UTC)
-            # Reuse prior dataset key; still need local normalized rows? Link by copying key only.
-            # Materialize local dataset so agents on this host can use a file path.
-            try:
-                from app.services import artifact_store
-
-                artifact_store.ensure_job_tree(upload_id)
-                payload = get_object_bytes(settings.minio_bucket_parsed, dup.unified_dataset_key)
-                artifact_store.write_bytes(upload_id, "parser", "unified_dataset.json", payload)
-                # Still save the uploaded original into the shared input folder
-                artifact_store.save_upload_files_to_input_root(
-                    upload_id,
-                    original_name=job.file_name or "upload.bin",
-                    original_bytes=raw,
-                    work_files=None,
-                )
-                artifact_store.append_log(
-                    upload_id,
-                    f"parser skipped_duplicate reused_key={dup.unified_dataset_key}",
-                )
-            except Exception as exc:  # noqa: BLE001
-                log.warning("duplicate_local_dataset_failed", extra={"structured_extra": {"error": str(exc)}})
-            job.status = UploadStatus.processing
-            await mark_stage(db, job, PipelineStage.detecting_format, status="done")
-            await mark_stage(db, job, PipelineStage.parsing, status="done")
-            await mark_stage(db, job, PipelineStage.generating_metadata, status="done")
-            await mark_stage(db, job, PipelineStage.normalizing, status="done")
-            await db.commit()
-            await enqueue_orchestrate(upload_id)
-            return {"ok": True, "duplicate": True, "parser_job_id": str(parser_job.id)}
-
         with tempfile.TemporaryDirectory(prefix="verilumen_parse_") as tmp:
             tmp_path = Path(tmp)
             original_name = job.file_name or "upload.bin"
             original_path = tmp_path / Path(original_name).name
-            original_path.write_bytes(raw)
-            # Free the in-memory copy ASAP — free/Starter Render is only 512MB and
-            # API + ARQ share the same instance (OOM killed 17MB+ STIL parses).
-            del raw
+            # Stream from R2/MinIO to disk — never hold the whole ZIP in RAM.
+            size_bytes, sha = download_object_to_path(
+                job.minio_bucket, job.minio_object_key, original_path
+            )
+            if settings.max_upload_bytes and size_bytes > settings.max_upload_bytes:
+                await fail_stage(
+                    db, job, PipelineStage.validating, f"File exceeds max size {settings.max_upload_bytes}"
+                )
+                await db.commit()
+                return {"ok": False, "error": "FILE_TOO_LARGE"}
+
+            job.checksum_sha256 = sha
+            await mark_stage(db, job, PipelineStage.validating, status="done")
+
+            dup = await repo.find_duplicate_by_sha256(db, sha, job.id)
+            parser_job = await repo.create_parser_job(db, job.id, sha256=sha, status=ParserJobStatus.running)
+
+            if dup and dup.unified_dataset_key:
+                parser_job.status = ParserJobStatus.skipped_duplicate
+                parser_job.duplicate_of = dup.id
+                parser_job.unified_dataset_key = dup.unified_dataset_key
+                parser_job.parser_id = dup.parser_id
+                parser_job.confidence = dup.confidence
+                parser_job.completed_at = datetime.now(UTC)
+                try:
+                    from app.services import artifact_store
+
+                    artifact_store.ensure_job_tree(upload_id)
+                    payload = get_object_bytes(settings.minio_bucket_parsed, dup.unified_dataset_key)
+                    artifact_store.write_bytes(upload_id, "parser", "unified_dataset.json", payload)
+                    artifact_store.save_upload_files_to_input_root(
+                        upload_id,
+                        original_name=job.file_name or "upload.bin",
+                        original_path=original_path,
+                        work_files=None,
+                    )
+                    artifact_store.append_log(
+                        upload_id,
+                        f"parser skipped_duplicate reused_key={dup.unified_dataset_key}",
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    log.warning("duplicate_local_dataset_failed", extra={"structured_extra": {"error": str(exc)}})
+                job.status = UploadStatus.processing
+                await mark_stage(db, job, PipelineStage.detecting_format, status="done")
+                await mark_stage(db, job, PipelineStage.parsing, status="done")
+                await mark_stage(db, job, PipelineStage.generating_metadata, status="done")
+                await mark_stage(db, job, PipelineStage.normalizing, status="done")
+                await db.commit()
+                await enqueue_orchestrate(upload_id)
+                return {"ok": True, "duplicate": True, "parser_job_id": str(parser_job.id)}
+
             import gc
 
             gc.collect()
@@ -253,7 +250,53 @@ class ParserPipelineService:
                 else:
                     profile = "auto"
                 ctx = ParseContext(profile=profile, max_size_bytes=settings.max_upload_bytes, enable_cache=False)
-                outcome = engine.parse(path, ctx=ctx, use_cache=False)
+                # Free-tier: skip heavy STIL body — ScanStructures-only already used via diagnosis;
+                # additionally skip pandas-heavy log plugins when PARSER_LIGHT_MODE=true.
+                if settings.parser_light_mode and log_like:
+                    from app.services.log_enrichment import parse_log_files
+                    from parser_engine.v2.contracts import ParseOutcome
+                    from parser_engine.v2.models.enterprise_record import EnterpriseRecord
+
+                    light = parse_log_files([path])
+                    records = []
+                    if light is not None:
+                        for fail in (light.failures or [])[:500]:
+                            er = EnterpriseRecord(
+                                die_id=str(fail.get("die_id") or path.stem),
+                                lot_id=light.lot_id or "",
+                                wafer_id=light.wafer_id or "",
+                                test_stage="ATE_LOG",
+                                pass_fail="FAIL",
+                                source_file=str(path),
+                                parser_id="ate-log-light",
+                                chain_id=str(fail.get("chain_id") or ""),
+                                failing_patterns=[str(fail.get("pattern_id") or "")]
+                                if fail.get("pattern_id")
+                                else [],
+                                raw_fields={k: str(v) for k, v in fail.items() if v is not None},
+                            )
+                            er.record_key = er.build_record_key()
+                            records.append(er)
+                        if not records:
+                            er = EnterpriseRecord(
+                                die_id=path.stem,
+                                lot_id=light.lot_id or "",
+                                wafer_id=light.wafer_id or "",
+                                test_stage="ATE_LOG",
+                                pass_fail="PASS",
+                                source_file=str(path),
+                                parser_id="ate-log-light",
+                            )
+                            er.record_key = er.build_record_key()
+                            records.append(er)
+                    outcome = ParseOutcome(
+                        parser_id="ate-log-light",
+                        records=records,
+                        success=bool(records),
+                        errors=[],
+                    )
+                else:
+                    outcome = engine.parse(path, ctx=ctx, use_cache=False)
 
                 if not outcome.success and not outcome.records:
                     err = "; ".join(f"{e.code}:{e.message}" for e in outcome.errors) or "PARSE_FAILED"
