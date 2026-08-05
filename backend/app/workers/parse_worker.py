@@ -25,6 +25,25 @@ async def enqueue_parse_job(job_id: str) -> None:
 
 async def parse_upload(ctx, job_id: str) -> dict:
     """Download from MinIO → ParserEngineV2 → unified dataset → enqueue orchestrate_agents."""
+    # Free-tier death loop: OOM kill → restart → retry same huge STIL forever.
+    tries = int(ctx.get("job_try") or 1)
+    if tries >= 2 and settings.parser_light_mode:
+        async with AsyncSessionLocal() as db:
+            result = await db.execute(select(UploadJob).where(UploadJob.id == uuid.UUID(job_id)))
+            job = result.scalar_one_or_none()
+            if job is not None:
+                from app.models.uploads import UploadStatus
+                from app.orchestration.progress import fail_stage
+                from app.domain.pipeline_stages import PipelineStage
+
+                msg = (
+                    "Parse aborted after retry (free-tier memory limit). "
+                    "Use a smaller STIL/log, or upgrade ate-api to 2GB and set ENABLE_INLINE_WORKER=1."
+                )
+                await fail_stage(db, job, PipelineStage.parsing, msg)
+                await db.commit()
+            return {"ok": False, "error": "aborted_oom_retry", "try": tries}
+
     async with AsyncSessionLocal() as db:
         result = await db.execute(select(UploadJob).where(UploadJob.id == uuid.UUID(job_id)))
         job = result.scalar_one_or_none()

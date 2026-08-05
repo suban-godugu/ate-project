@@ -250,9 +250,33 @@ class ParserPipelineService:
                 else:
                     profile = "auto"
                 ctx = ParseContext(profile=profile, max_size_bytes=settings.max_upload_bytes, enable_cache=False)
-                # Free-tier: skip heavy STIL body — ScanStructures-only already used via diagnosis;
-                # additionally skip pandas-heavy log plugins when PARSER_LIGHT_MODE=true.
-                if settings.parser_light_mode and log_like:
+                # Free-tier: never run full STIL/log plugins (OOM on 512MB).
+                # STIL → metadata stub; LOG → lightweight line parser (capped).
+                if settings.parser_light_mode and stil_like:
+                    from parser_engine.v2.contracts import ParseOutcome
+                    from parser_engine.v2.models.enterprise_record import EnterpriseRecord
+
+                    er = EnterpriseRecord(
+                        die_id=path.stem,
+                        test_stage="STIL",
+                        pass_fail="PASS",
+                        source_file=str(path),
+                        parser_id="stil-light",
+                        raw_fields={
+                            "light_mode": "true",
+                            "size_bytes": str(path.stat().st_size),
+                            "note": "STIL body skipped on free-tier light parse",
+                        },
+                    )
+                    er.record_key = er.build_record_key()
+                    outcome = ParseOutcome(
+                        parser_id="stil-light",
+                        records=[er],
+                        success=True,
+                        errors=[],
+                        metadata={"light_mode": True, "size_bytes": path.stat().st_size},
+                    )
+                elif settings.parser_light_mode and log_like:
                     from app.services.log_enrichment import parse_log_files
                     from parser_engine.v2.contracts import ParseOutcome
                     from parser_engine.v2.models.enterprise_record import EnterpriseRecord
@@ -260,7 +284,7 @@ class ParserPipelineService:
                     light = parse_log_files([path])
                     records = []
                     if light is not None:
-                        for fail in (light.failures or [])[:500]:
+                        for fail in (light.failures or [])[:100]:
                             er = EnterpriseRecord(
                                 die_id=str(fail.get("die_id") or path.stem),
                                 lot_id=light.lot_id or "",
