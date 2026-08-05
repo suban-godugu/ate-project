@@ -1,5 +1,6 @@
 from datetime import timedelta
 from io import BytesIO
+from pathlib import Path
 
 from minio import Minio
 from minio.error import S3Error
@@ -58,9 +59,8 @@ def download_object_to_path(bucket: str, object_key: str, dest_path: str | Path)
     Returns (size_bytes, sha256_hex).
     """
     import hashlib
-    from pathlib import Path as _Path
 
-    path = _Path(dest_path)
+    path = Path(dest_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     client = get_minio_client()
     digest = hashlib.sha256()
